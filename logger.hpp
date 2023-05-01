@@ -1,10 +1,12 @@
+#include <sstream>
 
 class Logger {
-    // TODO:
-    // Initialize the logger file (Create it)
-public:
-    static void write() {
-        // Write to logger file
-    }
+   private:
+    std::string logFile;
 
+   public:
+    Logger();
+    Logger(std::string filename);
+    void write(std::string message);
+    void write(std::string command, int commandNumber);
 };
