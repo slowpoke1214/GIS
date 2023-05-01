@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <ctime>
 #include "gis_record.hpp"
 #include "logger.hpp"
 using namespace std;
@@ -35,6 +36,21 @@ private:
     fstream scriptStream;
     int commandNumber;
 
+void initLog() {
+    stringstream msg;
+    msg << "Course Project for COMP 8042" << endl
+        << "Student Name: Tushya Iyer, Student Id: A01023434" << endl
+        << "Student Name: Joey Kennedy, Student Id: <STUDENT ID>" << endl
+        << "Begin of GIS Program log:" << endl
+        << "dbFile: " << databaseFile << endl
+        << "script: " << scriptFile << endl
+        << "log: " << logger.logFile << endl
+        << "Start Time: " << time(0);
+
+    logger.write(msg.str());
+}
+
+
 public:
 
     CommandProcesor(string db, string script, string log) {
@@ -42,6 +58,8 @@ public:
         scriptFile = std::move(script);
         logger = Logger(log);
         commandNumber = 0;
+
+        initLog();
     }
 
     void run() {
