@@ -27,13 +27,15 @@ class SystemManager {
 class CommandProcesor {
     // TODO:
     //  Read script file
-public:
+private:
     // Instantiate class attributes
     string databaseFile;
     string scriptFile;
     Logger logger;
     fstream scriptStream;
     int commandNumber;
+
+public:
 
     CommandProcesor(string db, string script, string log) {
         databaseFile = std::move(db);
