@@ -2,6 +2,7 @@
 #include <sstream>
 
 const char GISRecordDelimeter = '|';
+const int NumGISRecordFields = 20;
 
 
 class GISRecord {
