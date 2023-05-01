@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "gis_record.hpp"
+#include "logger.hpp"
 using namespace std;
 
 enum Command { };
@@ -16,16 +17,6 @@ class CoordinateIndex {
 };
 
 class BufferPool {
-
-};
-
-class Logger {
-    // TODO:
-    // Initialize the logger file (Create it)
-public:
-    static void write() {
-        // Write to logger file
-    }
 
 };
 
