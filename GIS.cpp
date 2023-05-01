@@ -45,15 +45,24 @@ void initLog() {
         << "dbFile: " << databaseFile << endl
         << "script: " << scriptFile << endl
         << "log: " << logger.logFile << endl
-        << "Start Time: " << time(0);
+        << "Start Time: " << getDatetime();
 
     logger.write(msg.str());
 }
 
 void closeLog() {
     stringstream msg;
-    msg << "End time: " << time(0);
+    msg << "End time: " << getDatetime();
     logger.write(msg.str());
+}
+
+static string getDatetime() {
+    time_t now = time(0);
+    tm* nowTm = localtime(&now);
+    char buffer[30];
+
+    strftime(buffer, 30, "%a %b %d %H:%M:%S %Z %Y", nowTm);
+    return buffer;
 }
 
 public:
