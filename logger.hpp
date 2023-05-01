@@ -2,9 +2,9 @@
 
 class Logger {
    private:
-    std::string logFile;
 
    public:
+    std::string logFile;
     Logger();
     Logger(std::string filename);
     void write(std::string message);
