@@ -31,13 +31,15 @@ public:
     // Instantiate class attributes
     string databaseFile;
     string scriptFile;
-    string logfile;
+    Logger logger;
     fstream scriptStream;
+    int commandNumber;
 
     CommandProcesor(string db, string script, string log) {
         databaseFile = std::move(db);
         scriptFile = std::move(script);
-        logfile = std::move(log);
+        logger = Logger(log);
+        commandNumber = 0;
     }
 
     void run() {
@@ -48,12 +50,14 @@ public:
 
         if (scriptStream) {
             while (std::getline(scriptStream, command)) {
-                cout << command;
-                cout << "\n";
+                // cout << command;
+                // cout << "\n";
 
                 if (command[0] == ';') {
-                    // Line is comment, log it using Logger class
+                    logger.write(command);
                 } else {
+                    logger.write(command, commandNumber++);
+
                     // Command is not a comment, begin parsing for commands:
 
                     // Check for quit
