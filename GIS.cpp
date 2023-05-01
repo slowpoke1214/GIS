@@ -50,6 +50,11 @@ void initLog() {
     logger.write(msg.str());
 }
 
+void closeLog() {
+    stringstream msg;
+    msg << "End time: " << time(0);
+    logger.write(msg.str());
+}
 
 public:
 
@@ -101,7 +106,7 @@ public:
         }
         // Create database file
         // Create Log file, fill out start and end (start time, end time, etc)
-
+        closeLog();
     }
 };
 
