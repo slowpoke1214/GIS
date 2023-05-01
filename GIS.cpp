@@ -1,14 +1,11 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "gis_record.hpp"
 using namespace std;
 
 enum Command { };
 struct DMS { };
-
-class GISRecord {
-
-};
 
 class NameIndex {
 
