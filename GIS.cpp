@@ -4,6 +4,7 @@
 #include <ctime>
 #include "gis_record.hpp"
 #include "logger.hpp"
+#include "system_manager.hpp"
 using namespace std;
 
 enum Command { };
@@ -18,10 +19,6 @@ class CoordinateIndex {
 };
 
 class BufferPool {
-
-};
-
-class SystemManager {
 
 };
 
