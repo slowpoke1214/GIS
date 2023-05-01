@@ -20,12 +20,12 @@ void Logger::write(std::string message) {
 }
 
 void Logger::write(std::string command, int commandNumber) {
-    if (commandNumber == 0)
-    {
+    if (commandNumber == 0) {
         write(command);
     } else {
         std::fstream logStream(logFile, std::ios::app);
-        logStream << "Command " << commandNumber << ": " << command << std::endl;
+        logStream << "Command " << commandNumber << ": " << command
+                  << std::endl;
         logStream.close();
     }
 }
