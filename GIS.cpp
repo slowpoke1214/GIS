@@ -117,12 +117,14 @@ public:
 };
 
 int main(int argc, char *argv[]) {
-    const char * database_filename = argv[1];
-    const char * script_filename = argv[2];
-    const char * logfile_filename = argv[3];
 
-    CommandProcesor commandProcessor(database_filename, script_filename, logfile_filename);
+    string databaseFilename, scriptFilename, logfileFilename;
+
+    tie(databaseFilename, scriptFilename, logfileFilename) = SystemManager::verifyArguments(argc, argv);
+
+    CommandProcesor commandProcessor(databaseFilename, scriptFilename, logfileFilename);
     commandProcessor.run();
 
     return 0;
 }
+
