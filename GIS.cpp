@@ -4,7 +4,6 @@
 #include "command_processor.hpp"
 using namespace std;
 
-enum Command { };
 struct DMS { };
 
 class NameIndex {
