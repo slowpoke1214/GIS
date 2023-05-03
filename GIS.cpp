@@ -93,7 +93,6 @@ public:
                     logger.write(command);
                 } else {
                     logger.write(command, commandNumber++);
-
                     // Command is not a comment, begin parsing for commands:
 
                     // Check for quit
@@ -107,20 +106,14 @@ public:
                             subCommands.push_back(cmds);  // Store all sub commands in the array for current line
                         }
 
-                        if (command.substr(0, command.find(' ')) == "world") {
+                        if (subCommands[0] == "world") {
                             // Line is a world command
                             // TODO:
-                            // 1. Parse arguments
-                            // 2. Ensure that world can only be run once, (Create counter variable)
+                            // 1. Ensure that world can only be run once, (Create counter variable)
                             worldRun(subCommands);
                         }
                     }
                 }
-
-                // TODO:
-                // 1. Ignore comments (lines that start with ';'
-                // 2. Determine Commands (world, import, debug, etc) and their arguments
-                // 3.
             }
         }
         // Create database file
@@ -181,13 +174,16 @@ public:
             }
         }
 
+         // Display end results to log
         worldBorder = worldBorderTotalSeconds;
-//        logger.write("Latitude/longitude values in index entries are shown as signed integers, in total seconds.");
-//        logger.write("World Boundaries are set to:");
-//        logger.write("\t" + std::to_string(worldBorder.northLat));
-//        logger.write(std::to_string(worldBorder.westLong) + "\t\t" + std::to_string(worldBorder.eastLong));
-//        logger.write("\t" + std::to_string(worldBorder.southLat));
-//        logger.write("------------------------------------------------------------------------------------------");
+         logger.write("------------------------------------------------------------------------------------------");
+        logger.write("Latitude/longitude values in index entries are shown as signed integers, in total seconds.");
+        logger.write("------------------------------------------------------------------------------------------");
+        logger.write("World Boundaries are set to:");
+        logger.write("\t" + std::to_string(worldBorder.northLat));
+        logger.write(std::to_string(worldBorder.westLong) + "\t\t" + std::to_string(worldBorder.eastLong));
+        logger.write("\t" + std::to_string(worldBorder.southLat));
+        logger.write("------------------------------------------------------------------------------------------");
 
 }
 };
@@ -196,7 +192,7 @@ int main(int argc, char *argv[]) {
 
     string databaseFilename, scriptFilename, logfileFilename;
 
-//    tie(databaseFilename, scriptFilename, logfileFilename) = SystemManager::verifyArguments(argc, argv);
+    tie(databaseFilename, scriptFilename, logfileFilename) = SystemManager::verifyArguments(argc, argv);
 
     CommandProcesor commandProcessor(databaseFilename, scriptFilename, logfileFilename);
     commandProcessor.run();

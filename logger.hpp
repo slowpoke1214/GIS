@@ -1,3 +1,6 @@
+#ifndef LOGGER
+#define LOGGER
+
 #include <sstream>
 
 class Logger {
@@ -6,7 +9,9 @@ class Logger {
    public:
     std::string logFile;
     Logger();
-    Logger(std::string filename);
+    explicit Logger(std::string filename);
     void write(std::string message);
     void write(std::string command, int commandNumber);
 };
+
+#endif
