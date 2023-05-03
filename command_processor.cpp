@@ -1,5 +1,10 @@
-#include <sstream>
 #include "command_processor.hpp"
+
+#include <iostream>
+#include <sstream>
+
+#include "world.hpp"
+#include "command.hpp"
 
 void CommandProcesor::initLog() {
   std::stringstream msg;
@@ -41,43 +46,33 @@ CommandProcesor::CommandProcesor(std::string db, std::string script,
 }
 
 void CommandProcesor::run() {
-  // TODO:
-  // Read Script file
   scriptStream.open(scriptFile, std::ios::in);
-  std::string command;
+  std::string commandString;
 
   if (scriptStream) {
-    while (std::getline(scriptStream, command)) {
-      // cout << command;
-      // cout << "\n";
+    while (std::getline(scriptStream, commandString)) {
+      std::vector<std::string> commandTokens =
+          helpers::splitString(commandString, scriptDelimeter);
 
-      if (command[0] == ';') {
-        logger.write(command);
+      Command command = stringToCommand(commandTokens[0]);
+      std::vector<std::string> args(commandTokens.begin() + 1,
+                                    commandTokens.end());
+
+      if (command == Command::comment) {
+        logger.write(commandString);
+        continue;
       } else {
-        logger.write(command, commandNumber++);
-
-        // Command is not a comment, begin parsing for commands:
-
-        // Check for quit
-        if (command.substr(0, command.find(' ')) == "quit") {
-          // Line is a quit command
-        } else {
-          // Line is an actual command
-          if (command.substr(0, command.find(' ')) == "world") {
-            // Line is a world command
-            // TODO:
-            // 1. Parse arguments
-          }
+        logger.write(commandString, commandNumber++);
+        switch (command) {
+          case Command::world:
+            world(DMS(args[0]), DMS(args[1]), DMS(args[2]), DMS(args[3]));
+            break;
+          default:
+            continue;
+            break;
         }
       }
-
-      // TODO:
-      // 1. Ignore comments (lines that start with ';'
-      // 2. Determine Commands (world, import, debug, etc) and their arguments
-      // 3.
     }
   }
-  // Create database file
-  // Create Log file, fill out start and end (start time, end time, etc)
   closeLog();
 }
