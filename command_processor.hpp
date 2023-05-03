@@ -11,6 +11,7 @@ class CommandProcesor {
   Logger logger;
   std::fstream scriptStream;
   int commandNumber;
+  char scriptDelimeter = '\t';
 
   void initLog();
 
