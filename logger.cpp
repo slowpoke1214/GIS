@@ -25,7 +25,8 @@ void Logger::write(std::string command, int commandNumber) {
     } else {
         std::fstream logStream(logFile, std::ios::app);
         logStream << "Command " << commandNumber << ": " << command
-                  << std::endl;
+                  << std::endl << std::endl;
         logStream.close();
+        write(commandLogSeperator);
     }
 }

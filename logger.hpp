@@ -2,6 +2,7 @@
 
 class Logger {
    private:
+    std::string commandLogSeperator = std::string(90, '-');
 
    public:
     std::string logFile;
