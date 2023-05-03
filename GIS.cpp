@@ -8,7 +8,12 @@
 using namespace std;
 
 enum Command { };
-struct DMS { };
+struct worldDMS {
+    int westLong = 0;
+    int eastLong = 0;
+    int southLat = 0;
+    int northLat = 0;
+};
 
 class NameIndex {
 
@@ -32,6 +37,7 @@ private:
     Logger logger;
     fstream scriptStream;
     int commandNumber;
+    worldDMS worldBorder;  // World border attribute
 
 void initLog() {
     stringstream msg;
@@ -81,8 +87,7 @@ public:
 
         if (scriptStream) {
             while (std::getline(scriptStream, command)) {
-                // cout << command;
-                // cout << "\n";
+                vector<string> subCommands;  // Vector for storing sub commands following the initial primary command
 
                 if (command[0] == ';') {
                     logger.write(command);
@@ -95,11 +100,19 @@ public:
                     if (command.substr(0, command.find(' ')) == "quit") {
                         // Line is a quit command
                     } else {
-                        // Line is an actual command
+                        // Line is an actual command, sort sub commands
+                        istringstream commandsStream(command);
+                        string cmds;
+                        while (getline(commandsStream, cmds, '\t')) {
+                            subCommands.push_back(cmds);  // Store all sub commands in the array for current line
+                        }
+
                         if (command.substr(0, command.find(' ')) == "world") {
                             // Line is a world command
                             // TODO:
                             // 1. Parse arguments
+                            // 2. Ensure that world can only be run once, (Create counter variable)
+                            worldRun(subCommands);
                         }
                     }
                 }
@@ -114,13 +127,18 @@ public:
         // Create Log file, fill out start and end (start time, end time, etc)
         closeLog();
     }
+
+    void worldRun(const vector<string>& worldArgs) {
+    // Instantiate world border struct
+    worldDMS worldBorderTotalSeconds;
+}
 };
 
 int main(int argc, char *argv[]) {
 
     string databaseFilename, scriptFilename, logfileFilename;
 
-    tie(databaseFilename, scriptFilename, logfileFilename) = SystemManager::verifyArguments(argc, argv);
+//    tie(databaseFilename, scriptFilename, logfileFilename) = SystemManager::verifyArguments(argc, argv);
 
     CommandProcesor commandProcessor(databaseFilename, scriptFilename, logfileFilename);
     commandProcessor.run();
