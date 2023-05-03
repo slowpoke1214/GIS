@@ -131,6 +131,64 @@ public:
     void worldRun(const vector<string>& worldArgs) {
     // Instantiate world border struct
     worldDMS worldBorderTotalSeconds;
+
+         for (int i = 1; i <= worldArgs.size(); ++i) {
+            int val;
+            if (i == 1) {
+                // West Longitude
+                val = (std::stoi(worldArgs[i].substr(0, 3)) * 3600) +
+                        (std::stoi(worldArgs[i].substr(3, 2)) * 60) +
+                        (std::stoi(worldArgs[i].substr(5, 2)));
+
+                if ( worldArgs[i][7] == 'W') {
+                    val = val * -1;
+                }
+
+                worldBorderTotalSeconds.westLong = val;
+            } else if (i == 2) {
+                // East Longitude
+                val = (std::stoi(worldArgs[i].substr(0, 3)) * 3600) +
+                        (std::stoi(worldArgs[i].substr(3, 2)) * 60) +
+                        (std::stoi(worldArgs[i].substr(5, 2)));
+
+                if ( worldArgs[i][7] == 'W') {
+                    val = val * -1;
+                }
+
+                worldBorderTotalSeconds.eastLong = val;
+            } else if (i == 3) {
+                // South Latitude
+                val = (std::stoi(worldArgs[i].substr(0, 2)) * 3600) +
+                        (std::stoi(worldArgs[i].substr(2, 2)) * 60) +
+                        (std::stoi(worldArgs[i].substr(4, 2)));
+
+                if ( worldArgs[i][6] == 'S') {
+                    val = val * -1;
+                }
+
+                worldBorderTotalSeconds.southLat = val;
+            } else if (i == 4) {
+                // North Latitude
+                val = (std::stoi(worldArgs[i].substr(0, 2)) * 3600) +
+                        (std::stoi(worldArgs[i].substr(2, 2)) * 60) +
+                        (std::stoi(worldArgs[i].substr(4, 2)));
+
+                if ( worldArgs[i][6] == 'S') {
+                    val = val * -1;
+                }
+
+                worldBorderTotalSeconds.northLat = val;
+            }
+        }
+
+        worldBorder = worldBorderTotalSeconds;
+//        logger.write("Latitude/longitude values in index entries are shown as signed integers, in total seconds.");
+//        logger.write("World Boundaries are set to:");
+//        logger.write("\t" + std::to_string(worldBorder.northLat));
+//        logger.write(std::to_string(worldBorder.westLong) + "\t\t" + std::to_string(worldBorder.eastLong));
+//        logger.write("\t" + std::to_string(worldBorder.southLat));
+//        logger.write("------------------------------------------------------------------------------------------");
+
 }
 };
 
