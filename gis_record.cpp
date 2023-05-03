@@ -1,9 +1,10 @@
 #include "gis_record.hpp"
+#include "gis_helpers.hpp"
 
 #include <iostream>
 
 GISRecord::GISRecord(const std::string &line) {
-    std::vector<std::string> attributes = parseLine(line);
+    std::vector<std::string> attributes = helpers::splitString(line, GISRecordDelimeter);
 
     try {
         if (attributes.size() < NumGISRecordFields - 1) {
@@ -55,14 +56,3 @@ GISRecord::GISRecord(const std::string &line) {
 }
 
 GISRecord::~GISRecord() {}
-
-std::vector<std::string> GISRecord::parseLine(const std::string &line) {
-    std::stringstream data(line);
-    std::vector<std::string> attributes;
-
-    std::string attr;
-    while (std::getline(data, attr, GISRecordDelimeter)) {
-        attributes.push_back(attr);
-    }
-    return attributes;
-}
