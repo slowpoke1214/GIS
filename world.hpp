@@ -4,6 +4,7 @@
 class world : private Region {
  private:
  public:
+  world();
   world(DMS westLong, DMS eastLong, DMS southLat, DMS northLat);
 };
 
