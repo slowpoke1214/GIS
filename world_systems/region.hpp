@@ -12,5 +12,6 @@ class Region {
 
  public:
   // Region(Coordinate bottomLeft, float height, float width);
+  Region();
   Region(DMS northLat, DMS southLat, DMS eastLong, DMS westLong);
 };
