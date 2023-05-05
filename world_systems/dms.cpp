@@ -42,9 +42,13 @@ DMS::DMS(std::string dmsString) {
   //           << hemisphereToString(hem) << std::endl;
 }
 
-DD DMS::dd() { return DD(deg + min / 60 + sec / 3600); }
+DD DMS::dd() { return DD(deg + min / 60 + sec / 3600 * (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1)); }
 
 float DMS::toFloat() { return dd().toFloat(); }
+
+int DMS::totalSeconds() {
+  return deg * 3600 + min * 60 + sec * (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1);
+}
 
 std::string DMS::repr() {
   std::stringstream r;

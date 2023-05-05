@@ -34,15 +34,14 @@ class DMS {
 
   DD dd();
   float toFloat();
+  int totalSeconds();
   std::string repr();
 };
 
 class Coordinate {
- private:
+ public:
   DMS lon;
   DMS lat;
-
- public:
   Coordinate();
   Coordinate(DMS longitude, DMS latitude);
   std::string repr();
