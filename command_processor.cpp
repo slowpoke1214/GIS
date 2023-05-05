@@ -2,9 +2,11 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
+#include <vector>
 
-#include "world.hpp"
 #include "command.hpp"
+#include "gis_helpers.hpp"
 
 void CommandProcesor::initLog() {
   std::stringstream msg;
@@ -65,7 +67,7 @@ void CommandProcesor::run() {
         logger.write(commandString, commandNumber++);
         switch (command) {
           case Command::world:
-            world(DMS(args[0]), DMS(args[1]), DMS(args[2]), DMS(args[3]));
+            worldBorder = world(DMS(args[0]), DMS(args[1]), DMS(args[2]), DMS(args[3]));
             break;
           default:
             continue;

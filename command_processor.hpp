@@ -2,6 +2,10 @@
 #include <string>
 
 #include "logger.hpp"
+#include "world_systems/region.hpp"
+// #include "world.hpp"
+
+using world = Region;
 
 class CommandProcesor {
  private:
@@ -9,6 +13,7 @@ class CommandProcesor {
   std::string databaseFile;
   std::string scriptFile;
   Logger logger;
+  world worldBorder;
   std::fstream scriptStream;
   int commandNumber;
   char scriptDelimeter = '\t';
