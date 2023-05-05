@@ -1,4 +1,5 @@
 #include "region.hpp"
+
 #include <iostream>
 
 Region::Region() {
@@ -13,3 +14,15 @@ Region::Region(DMS northLat, DMS southLat, DMS eastLong, DMS westLong) {
   width = eastLong.toFloat() - westLong.toFloat();
   //   std::cout << bottomLeft.repr() << std::endl;
 };
+
+DMS Region::top() {
+  return DMS(std::to_string(bottomLeft.lon.toFloat() + height));
+}
+
+DMS Region::bottom() { return bottomLeft.lon; }
+
+DMS Region::left() { return bottomLeft.lat; }
+
+DMS Region::right() {
+  return DMS(std::to_string(bottomLeft.lat.toFloat() + width));
+}
