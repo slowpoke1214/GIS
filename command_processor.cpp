@@ -68,6 +68,7 @@ void CommandProcesor::run() {
         switch (command) {
           case Command::world:
             worldBorder = world(DMS(args[3]), DMS(args[2]), DMS(args[1]), DMS(args[0]));
+            logger.write(worldBorder.repr());
             break;
           default:
             continue;

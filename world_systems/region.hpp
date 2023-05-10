@@ -1,3 +1,5 @@
+#include <string>
+
 #include "coordinate.hpp"
 
 class Region {
@@ -18,4 +20,6 @@ class Region {
   DMS bottom();
   DMS left();
   DMS right();
+
+  std::string repr();
 };
