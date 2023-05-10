@@ -10,8 +10,8 @@ Region::Region() {
 };
 
 Region::Region(DMS northLat, DMS southLat, DMS eastLong, DMS westLong) {
-  bottomLeft = Coordinate(southLat, westLong);
-  topRight = Coordinate(northLat, eastLong);
+  bottomLeft = Coordinate(westLong, southLat);
+  topRight = Coordinate(eastLong, northLat);
 };
 
 DMS Region::top() { return topRight.lon; }
