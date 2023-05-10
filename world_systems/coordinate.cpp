@@ -27,6 +27,8 @@ DMS::DMS() {
   deg = 0;
   min = 0;
   sec = 0;
+  hem = Hemisphere::invalid_hemisphere;
+  isLat = false;
 }
 
 DMS::DMS(int totalSeconds, Hemisphere hemisphere) { 
