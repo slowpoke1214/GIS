@@ -7,8 +7,7 @@ class Region {
   // Longitude increase the farther East the coord is
   // Width affects Longitude, height affects Latitude
   Coordinate bottomLeft;
-  float height;
-  float width;
+  Coordinate topRight;
 
  public:
   // Region(Coordinate bottomLeft, float height, float width);
