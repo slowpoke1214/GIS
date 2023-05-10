@@ -7,7 +7,7 @@
 
 using world = Region;
 
-class CommandProcesor {
+class CommandProcessor {
  private:
   // Instantiate class attributes
   std::string databaseFile;
@@ -25,7 +25,7 @@ class CommandProcesor {
   static std::string getDatetime();
 
  public:
-  CommandProcesor(std::string db, std::string script, std::string log);
+  CommandProcessor(std::string db, std::string script, std::string log);
 
   void run();
 };

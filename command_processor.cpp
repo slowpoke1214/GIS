@@ -8,7 +8,7 @@
 #include "command.hpp"
 #include "gis_helpers.hpp"
 
-void CommandProcesor::initLog() {
+void CommandProcessor::initLog() {
   std::stringstream msg;
   msg << "Course Project for COMP 8042" << std::endl
       << "Student Name: Tushya Iyer, Student Id: A01023434" << std::endl
@@ -22,13 +22,13 @@ void CommandProcesor::initLog() {
   logger.write(msg.str());
 }
 
-void CommandProcesor::closeLog() {
+void CommandProcessor::closeLog() {
   std::stringstream msg;
   msg << "End time: " << getDatetime();
   logger.write(msg.str());
 }
 
-std::string CommandProcesor::getDatetime() {
+std::string CommandProcessor::getDatetime() {
   time_t now = time(0);
   tm* nowTm = localtime(&now);
   char buffer[30];
@@ -37,7 +37,7 @@ std::string CommandProcesor::getDatetime() {
   return buffer;
 }
 
-CommandProcesor::CommandProcesor(std::string db, std::string script,
+CommandProcessor::CommandProcessor(std::string db, std::string script,
                                  std::string log) {
   databaseFile = std::move(db);
   scriptFile = std::move(script);
@@ -47,7 +47,7 @@ CommandProcesor::CommandProcesor(std::string db, std::string script,
   initLog();
 }
 
-void CommandProcesor::run() {
+void CommandProcessor::run() {
   scriptStream.open(scriptFile, std::ios::in);
   std::string commandString;
 

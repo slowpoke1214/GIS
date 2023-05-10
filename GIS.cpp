@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
     tie(databaseFilename, scriptFilename, logfileFilename) = SystemManager::verifyArguments(argc, argv);
 
-    CommandProcesor commandProcessor(databaseFilename, scriptFilename, logfileFilename);
+    CommandProcessor commandProcessor(databaseFilename, scriptFilename, logfileFilename);
     commandProcessor.run();
 
     return 0;
