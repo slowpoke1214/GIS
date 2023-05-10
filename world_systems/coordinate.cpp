@@ -1,24 +1,23 @@
 #include "coordinate.hpp"
 
-#include <string>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 Coordinate::Coordinate() {
-    lon = DMS();
-    lat = DMS();
+  lon = DMS();
+  lat = DMS();
 }
 
 Coordinate::Coordinate(DMS longitude, DMS latitude) {
-    lon = longitude;
-    lat = latitude;
+  lon = longitude;
+  lat = latitude;
 }
 std::string Coordinate::repr() {
-    std::stringstream r;
-    r << "lat: " << lat.repr() << " lon: " << lon.repr() << std::endl;
-    return r.str();
+  std::stringstream r;
+  r << "lat: " << lat.repr() << " lon: " << lon.repr() << std::endl;
+  return r.str();
 }
-
 
 Hemisphere stringToHemisphere(std::string str);
 std::string hemisphereToString(Hemisphere hem);
@@ -31,8 +30,7 @@ DMS::DMS() {
   isLat = false;
 }
 
-DMS::DMS(int totalSeconds, Hemisphere hemisphere) { 
-  
+DMS::DMS(int totalSeconds, Hemisphere hemisphere) {
   int totalAbsSeconds = abs(totalSeconds);
 
   deg = int(totalAbsSeconds / 3600);
@@ -42,7 +40,6 @@ DMS::DMS(int totalSeconds, Hemisphere hemisphere) {
   sec = int(_totalSeconds);
   hem = hemisphere;
   isLat = (hem == Hemisphere::north or hem == Hemisphere::south);
-  
 }
 
 DMS::DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere) {
@@ -77,26 +74,26 @@ DMS::DMS(std::string dmsString) {
   //           << hemisphereToString(hem) << std::endl;
 }
 
-float DMS::dd() { return deg + min / 60 + sec / 3600 * (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1); }
+float DMS::dd() {
+  return deg + min / 60 +
+         sec / 3600 *
+             (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1);
+}
 
 int DMS::totalSeconds() {
-  return (deg * 3600 + min * 60 + sec) * (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1);
+  return (deg * 3600 + min * 60 + sec) *
+         (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1);
 }
 
-Hemisphere DMS::hemisphere() {
-  return hem;
-}
+Hemisphere DMS::hemisphere() { return hem; }
 
-bool DMS::isLatitude() {
-  return isLat;
-}
-bool DMS::isLongitude() {
-  return !isLat;
-}
+bool DMS::isLatitude() { return isLat; }
+bool DMS::isLongitude() { return !isLat; }
 
 std::string DMS::repr() {
   std::stringstream r;
-  r << (isLat ^ (abs(deg) > 100) ? "" : "0") << deg << "d " << min << "m " << sec << "s " << hemisphereToString(hem);
+  r << (isLat ^ (abs(deg) > 100) ? "" : "0") << deg << "d " << min << "m "
+    << sec << "s " << hemisphereToString(hem);
   return r.str();
 }
 
