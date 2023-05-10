@@ -6,18 +6,25 @@ std::string hemisphereToString(Hemisphere hem);
 
 class DMS {
  private:
+  static const int latDigits = 7;
+  static const int lonDigits = 8;
   int deg;
   int min;
   float sec;
   Hemisphere hem;
+  bool isLat;
 
  public:
   DMS();
+  DMS(int totalSeconds, Hemisphere hemisphere);
   DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere);
   DMS(std::string dmsString);
 
   float dd();
   int totalSeconds();
+  Hemisphere hemisphere();
+  bool isLatitude();
+  bool isLongitude();
   std::string repr();
 };
 

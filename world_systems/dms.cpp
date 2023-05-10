@@ -12,11 +12,26 @@ DMS::DMS() {
   sec = 0;
 }
 
+DMS::DMS(int totalSeconds, Hemisphere hemisphere) { 
+  
+  int totalAbsSeconds = abs(totalSeconds);
+
+  deg = int(totalAbsSeconds / 3600);
+  int totalMinutes = totalAbsSeconds - deg * 3600;
+  min = int(totalMinutes / 60);
+  int _totalSeconds = totalMinutes - min * 60;
+  sec = int(_totalSeconds);
+  hem = hemisphere;
+  isLat = (hem == Hemisphere::north or hem == Hemisphere::south);
+  
+}
+
 DMS::DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere) {
   deg = degrees;
   min = minutes;
   sec = seconds;
   hem = hemisphere;
+  isLat = (hem == Hemisphere::north or hem == Hemisphere::south);
 }
 
 DMS::DMS(std::string dmsString) {
@@ -38,6 +53,7 @@ DMS::DMS(std::string dmsString) {
   sec = seconds;
   hem = hemisphere;
 
+  isLat = (hem == Hemisphere::north or hem == Hemisphere::south);
   // std::cout << deg << "d " << min << "m " << sec << "s "
   //           << hemisphereToString(hem) << std::endl;
 }
@@ -45,12 +61,23 @@ DMS::DMS(std::string dmsString) {
 float DMS::dd() { return deg + min / 60 + sec / 3600 * (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1); }
 
 int DMS::totalSeconds() {
-  return deg * 3600 + min * 60 + sec * (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1);
+  return (deg * 3600 + min * 60 + sec) * (hem == Hemisphere::south or hem == Hemisphere::west ? -1 : 1);
+}
+
+Hemisphere DMS::hemisphere() {
+  return hem;
+}
+
+bool DMS::isLatitude() {
+  return isLat;
+}
+bool DMS::isLongitude() {
+  return !isLat;
 }
 
 std::string DMS::repr() {
   std::stringstream r;
-  r << deg << "d " << min << "m " << sec << "s " << hemisphereToString(hem);
+  r << (isLat ^ (abs(deg) > 100) ? "" : "0") << deg << "d " << min << "m " << sec << "s " << hemisphereToString(hem);
   return r.str();
 }
 
