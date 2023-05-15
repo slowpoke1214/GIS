@@ -1,5 +1,4 @@
 #include <sstream>
-#include <vector>
 
 const char GISRecordDelimeter = '|';
 const int NumGISRecordFields = 20;
@@ -26,8 +25,6 @@ class GISRecord {
     std::string map_name;
     std::string date_created;
     std::string date_edited;
-
-    std::vector<std::string> parseLine(const std::string &line);
 
    public:
     GISRecord(const std::string &line);
