@@ -12,7 +12,7 @@ void CommandProcessor::initLog() {
   std::stringstream msg;
   msg << "Course Project for COMP 8042" << std::endl
       << "Student Name: Tushya Iyer, Student Id: A01023434" << std::endl
-      << "Student Name: Joey Kennedy, Student Id: <STUDENT ID>" << std::endl
+      << "Student Name: Joey Kennedy, Student Id: A01030505" << std::endl
       << "Begin of GIS Program log:" << std::endl
       << "dbFile: " << databaseFile << std::endl
       << "script: " << scriptFile << std::endl
