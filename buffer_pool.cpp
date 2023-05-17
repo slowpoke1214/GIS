@@ -1,12 +1,35 @@
 #include "buffer_pool.hpp"
 
-std::string BufferPool::search() {
+std::string BufferPool::search(const int index) {
     // Searches the buffer pool for provided items
+
+    // Search for the key in the cache
+    for (int i = 0; i < cache_.size(); ++i) {
+        if (cache_[i].first == index) {
+            moveToFront(i);  // Move the item to the top of the cache
+            return cache_[0].second;  // Return the value from the Key/Value pair, which corresponds ot the line from the database
+        }
+    }
+
+    // If key is not in cache:
+        // Check if cache is full, remove LRU Item
+
+        // Insert new item to front of cache
+            // TODO: Read database lines, retrieve index and value of associated line
+            // TODO: Add index and value to cache as Key/Value pair
+
     return "Buffer Pool Search";
 }
 
-void BufferPool::insert() {
-    // Inserts an entry into the buffer pool
+void BufferPool::moveToFront(int index) {
+    // Moves a recently used item in the buffer pool to the front
+    for (int i = index; i > 0; --i) {
+        std::swap(cache_[i], cache_[i-1]);
+    }
+}
+
+void BufferPool::insert(int index, std::string value) {
+    // Inserts a new entry into the buffer pool
 }
 
 std::string BufferPool::str() {
