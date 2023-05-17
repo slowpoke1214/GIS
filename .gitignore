@@ -4,6 +4,7 @@ cmake-build-debug/*
 .idea
 program
 script01.txt
+log.txt
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,clion,vs
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,clion,vs
