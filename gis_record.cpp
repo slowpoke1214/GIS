@@ -3,11 +3,44 @@
 
 #include <iostream>
 
+GISRecord::GISRecord() {
+    isEmpty = true;
+}
+
+GISRecord::GISRecord(const GISRecord &record){
+    feature_id = record.feature_id;
+    feature_class = std::move(record.feature_class);
+    state_numeric = std::move(record.state_numeric);
+    county_name = std::move(record.county_name);
+    county_numeric = std::move(record.county_numeric);
+    primary_lat_dms = std::move(record.primary_lat_dms);
+    prim_long_dms = std::move(record.prim_long_dms);
+    prim_lat_dec = record.prim_lat_dec;
+    prim_long_dec = record.prim_long_dec;
+    source_lat_dms = std::move(record.source_lat_dms);
+    source_long_dms = std::move(record.source_long_dms);
+    source_lat_dec = record.source_lat_dec;
+    source_long_dec = record.source_long_dec;
+    elev_in_m = record.elev_in_m;
+    elev_in_ft = record.elev_in_ft;
+    map_name = std::move(record.map_name);
+    date_created = std::move(record.date_created);
+    date_edited = std::move(record.date_edited);
+    isEmpty = record.isEmpty;
+    feature_name = std::move(record.feature_name);
+    state_alpha = std::move(record.state_alpha);
+    // std::cout << str();
+}
+
+bool GISRecord::empty() {
+    return isEmpty;
+}
+
 GISRecord::GISRecord(const std::string &line) {
-    std::vector<std::string> attributes = helpers::splitString(line, GISRecordDelimeter);
+    std::vector<std::string> attributes = helpers::splitString(line, GISRecordDelimeter, NumGISRecordFields);
 
     try {
-        if (attributes.size() < NumGISRecordFields - 1) {
+        if (attributes.size() != NumGISRecordFields) {
             throw std::invalid_argument("Not enough fields in GIS Record");
         }
 
@@ -53,6 +86,10 @@ GISRecord::GISRecord(const std::string &line) {
             << e.what();
         throw std::invalid_argument(err.str());
     }
+    isEmpty = false;
 }
 
 GISRecord::~GISRecord() {}
+std::string GISRecord::str() {
+    return "feature name: " + feature_name + ", state: " + state_alpha + ", id: " + std::to_string(feature_id);
+}
