@@ -6,7 +6,7 @@
 namespace helpers {
 
 std::vector<std::string> splitString(const std::string& str,
-                                     const char delimeter) {
+                                     const char delimeter, const int expectedLength) {
   std::stringstream data(str);
   std::vector<std::string> attributes;
 
@@ -14,6 +14,11 @@ std::vector<std::string> splitString(const std::string& str,
   while (std::getline(data, attr, delimeter)) {
     attributes.push_back(attr);
   }
+  while (expectedLength != -1 and attributes.size() != expectedLength)
+  {
+    attributes.push_back("");
+  }
+  
   return attributes;
 }
 }  // namespace helpers
