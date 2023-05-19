@@ -4,10 +4,6 @@
 #include "command_processor.hpp"
 using namespace std;
 
-class NameIndex {
-
-};
-
 class CoordinateIndex {
 
 };
