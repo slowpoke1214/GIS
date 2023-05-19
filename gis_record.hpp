@@ -24,6 +24,8 @@ class GISRecord {
     std::string date_created;
     std::string date_edited;
 
+    bool isEmpty;
+
    public:
     GISRecord();
     GISRecord(const GISRecord &record);
@@ -31,4 +33,6 @@ class GISRecord {
     ~GISRecord();
     std::string feature_name;
     std::string state_alpha;
+
+    bool empty();
 };
