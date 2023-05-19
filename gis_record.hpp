@@ -33,6 +33,7 @@ class GISRecord {
     ~GISRecord();
     std::string feature_name;
     std::string state_alpha;
+    std::string str();
 
     bool empty();
 };
