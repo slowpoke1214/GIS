@@ -25,6 +25,8 @@ class GISRecord {
     std::string date_edited;
 
    public:
+    GISRecord();
+    GISRecord(const GISRecord &record);
     GISRecord(const std::string &line);
     ~GISRecord();
     std::string feature_name;
