@@ -1,7 +1,8 @@
 #include "buffer_pool.hpp"
 
-std::string BufferPool::search(const int index) {
+GISRecord BufferPool::search(const int index) {
     // Searches the buffer pool for provided items
+    GISRecord gisRecord("5");  // Temp Variable for testing
 
     // Search for the key in the cache
     for (int i = 0; i < cache_.size(); ++i) {
@@ -12,13 +13,14 @@ std::string BufferPool::search(const int index) {
     }
 
     // If key is not in cache:
-        // Check if cache is full, remove LRU Item
+    if (cache_.size() == maxPoolSize) {
+        // Cache is full, remove LRU
+    }
 
-        // Insert new item to front of cache
-            // TODO: Read database lines, retrieve index and value of associated line
-            // TODO: Add index and value to cache as Key/Value pair
+    // Insert new item to front of cache
+    // TODO: Call database function to retrieve GISRecord from database file
 
-    return "Buffer Pool Search";
+    return gisRecord;
 }
 
 void BufferPool::moveToFront(int index) {
