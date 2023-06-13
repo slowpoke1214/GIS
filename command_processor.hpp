@@ -2,14 +2,16 @@
 #include <string>
 
 #include "logger.hpp"
-#include "world_systems/region.hpp"
+// #include "world_systems/region.hpp"
 // #include "world.hpp"
+#include "database/database.hpp"
 
 using world = Region;
 
 class CommandProcessor {
  private:
   // Instantiate class attributes
+  Database database;
   std::string databaseFile;
   std::string scriptFile;
   Logger logger;
@@ -23,6 +25,8 @@ class CommandProcessor {
   void closeLog();
 
   static std::string getDatetime();
+
+  void import(std::string filename);
 
  public:
   CommandProcessor(std::string db, std::string script, std::string log);

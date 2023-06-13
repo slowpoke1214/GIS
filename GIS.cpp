@@ -1,21 +1,8 @@
 #include <string>
-#include "gis_record.hpp"
+// #include "gis_record.hpp"
 #include "system_manager.hpp"
 #include "command_processor.hpp"
 using namespace std;
-
-class NameIndex {
-
-};
-
-class CoordinateIndex {
-
-};
-
-class BufferPool {
-
-};
-
 
 int main(int argc, char *argv[]) {
 
