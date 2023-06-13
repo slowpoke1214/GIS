@@ -38,13 +38,23 @@ std::string CommandProcessor::getDatetime() {
 }
 
 CommandProcessor::CommandProcessor(std::string db, std::string script,
-                                 std::string log) {
+                                 std::string log) : database(Database(db)) {
   databaseFile = std::move(db);
   scriptFile = std::move(script);
   logger = Logger(log);
   commandNumber = 0;
 
   initLog();
+}
+
+void CommandProcessor::import(std::string filename) {
+  std::ifstream file(filename);
+
+  std::string line;
+  std::getline(file, line);
+  while (std::getline(file, line)) {
+    database.insert(line);
+  }
 }
 
 void CommandProcessor::run() {
@@ -70,6 +80,20 @@ void CommandProcessor::run() {
             worldBorder = world(DMS(args[3]), DMS(args[2]), DMS(args[1]), DMS(args[0]));
             logger.write(worldBorder.repr());
             break;
+          case Command::import:
+            import(args[0]);
+            break;
+          case Command::what_is:
+            {std::vector<GISRecord> records = database.whatIs(args[0], args[1]);
+            // std::cout << database.debugNameIndex() << std::endl;
+            for (auto &&rec : records)
+            {
+              // logger.write(rec.str());
+              std::cout << "found: " << rec.str() << std::endl;
+            }
+            break;
+            }
+            
           default:
             continue;
             break;
