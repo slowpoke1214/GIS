@@ -10,4 +10,5 @@ class Logger {
     Logger(std::string filename);
     void write(std::string message);
     void write(std::string command, int commandNumber);
+    void writeSeparator();
 };

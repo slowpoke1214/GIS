@@ -27,6 +27,9 @@ void Logger::write(std::string command, int commandNumber) {
         logStream << "Command " << commandNumber << ": " << command
                   << std::endl << std::endl;
         logStream.close();
-        write(commandLogSeperator);
     }
+}
+
+void Logger::writeSeparator() {
+    write(commandLogSeperator);
 }
