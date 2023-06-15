@@ -5,7 +5,9 @@ cmake-build-debug/*
 program
 script01.txt
 log.txt
-
+dbfile
+VA_Bath.txt
+VA_Monterey.txt
 # Created by https://www.toptal.com/developers/gitignore/api/c++,clion,vs
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,clion,vs
 

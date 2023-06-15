@@ -22,6 +22,7 @@ class NameNode {
 
 class NameIndex {
  private:
+    // TODO: Hash function
   // Temporarily use STD hash class build out NameIndex class
   // Will implement elfhash at later time
   std::hash<std::string> hasher;

@@ -68,10 +68,12 @@ std::string NameIndex::str()   {
 BufferPool::BufferPool() {}
 
 void BufferPool::insert(int index, GISRecord record) {
+    // TODO: Insert into the buffer pool
   return;
 }
 
 GISRecord BufferPool::search(int index) {
+    // TODO:
   std::cout << "searching buffer pool" << std::endl;
   GISRecord rec;
   return rec;
@@ -162,6 +164,8 @@ std::vector<GISRecord> Database::whatIsAt(Coordinate coord) {
 
 std::vector<GISRecord> Database::whatIs(std::string feature,
                                         std::string state) {
+    // TODO: Search Buffer Pool first
+
   // TODO: Search name index
   std::cout << "What is that? " << feature << ", " << state << std::endl;
   std::vector<int> indices = nameIndex.search(feature, state);
