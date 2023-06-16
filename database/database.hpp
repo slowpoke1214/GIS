@@ -81,7 +81,7 @@ class Database {
   void insert(std::string recordLine);
 
   std::vector<GISRecord> whatIsAt(Coordinate coord);
-  std::vector<GISRecord> whatIs(std::string feature, std::string state);
+  std::vector<std::string> whatIs(std::string feature, std::string state);
   std::vector<GISRecord> whatIsIn(Region region);
 
   std::string debugNameIndex();

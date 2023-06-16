@@ -81,22 +81,27 @@ void CommandProcessor::run() {
             logger.write(worldBorder.repr());
             break;
           case Command::import:
+          {
             import(args[0]);
+            logger.writeSeparator();
             break;
+          }
           case Command::what_is:
-            {std::vector<GISRecord> records = database.whatIs(args[0], args[1]);
-            // std::cout << database.debugNameIndex() << std::endl;
+          {
+            std::vector<std::string> records = database.whatIs(args[0], args[1]);
             for (auto &&rec : records)
             {
-              // logger.write(rec.str());
-              std::cout << "found: " << rec.str() << std::endl;
+              logger.write(rec);
             }
+            logger.writeSeparator();
             break;
             }
             
-          default:
+          default: {
+            logger.writeSeparator();
             continue;
             break;
+          }
         }
       }
     }

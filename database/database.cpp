@@ -73,7 +73,7 @@ void BufferPool::insert(int index, GISRecord record) {
 }
 
 GISRecord BufferPool::search(int index) {
-    // TODO:
+    // TODO: Bufferpool
   std::cout << "searching buffer pool" << std::endl;
   GISRecord rec;
   return rec;
@@ -162,23 +162,26 @@ std::vector<GISRecord> Database::whatIsAt(Coordinate coord) {
   return getRecords(indices);
 }
 
-std::vector<GISRecord> Database::whatIs(std::string feature,
-                                        std::string state) {
-    // TODO: Search Buffer Pool first
-
-  // TODO: Search name index
+std::vector<std::string> Database::whatIs(std::string feature, std::string state) {
   std::cout << "What is that? " << feature << ", " << state << std::endl;
   std::vector<int> indices = nameIndex.search(feature, state);
+  std::vector<std::string> recordStrings;
   if (!indices.empty()) {
-    std::cout << "all indices found in name index:" << std::endl;
-    for (auto&& i : indices) {
-      std::cout << i << std::endl;
+    std::vector<GISRecord> records = getRecords(indices);
+    for (int i = 0; i < records.size(); i++) {
+      GISRecord rec = records[i];
+      std::stringstream rStr;
+      rStr << "  " << indices[i] << ":  " << rec.county_name << "  (" << rec.primary_lat_dms << ", " << rec.prim_long_dms << ")";
+      recordStrings.push_back(rStr.str());
     }
 
+  } else {
+    std::stringstream rStr;
+    rStr << "  No records match \"" << feature << "\" and \"" << state << "\"";
+    recordStrings.push_back(rStr.str());
   }
   
-
-  return getRecords(indices);
+  return recordStrings;
 }
 
 std::vector<GISRecord> Database::whatIsIn(Region region) {
