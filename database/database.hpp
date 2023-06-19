@@ -66,7 +66,7 @@ class Database {
   int indexCount;
 
   BufferPool buffer;
-  NameIndex nameIndex;
+  NameIndex* nameIndex;
   // CoordinateIndex coordIndex;
 
   std::string searchFile(int index);
