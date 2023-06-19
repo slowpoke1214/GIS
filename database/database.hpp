@@ -11,12 +11,14 @@
 class NameNode {
  private:
  public:
+  bool isEmpty;
+  int feature_id;
   std::string feature_name;
   std::string state_alpha;
   int index;
 
   NameNode();
-  NameNode(std::string feature_name, std::string state_alpha, int index);
+  NameNode(int feature_id, std::string feature_name, std::string state_alpha, int index);
   NameNode(const NameNode& node);
 };
 
