@@ -27,7 +27,7 @@ class NameIndex {
   std::hash<std::string> hasher;
   // Temporarily use STD unordered map to build out NameIndex class
   // Will implement hash table at later time
-  std::unordered_map<int, NameNode> nameMap;
+  std::unordered_map<unsigned int, NameNode> nameMap;
 
  public:
   NameIndex();

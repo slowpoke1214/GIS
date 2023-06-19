@@ -22,15 +22,37 @@ NameNode::NameNode(const NameNode & node) {
 
 NameIndex::NameIndex() {}
 
+unsigned int elfHash(const std::string key) {
+  /**
+   * Elf hashing function
+   *
+   * @param key String of feature and state concatenated together
+   * @return The resulting hashed value
+   */
+  unsigned int hashVal = 0;
+  unsigned int len = key.length();
+  unsigned int x = 0;
+
+  for ( unsigned int i = 0; i < len; i++ ) {
+    // Elf Hash
+    hashVal = (hashVal << 4) + (key[i]);
+    if ( (x = hashVal & 0xF0000000) != 0 ) {
+      hashVal ^= (x >> 24);
+    }
+    hashVal&= ~x;
+  }
+  return hashVal;
+}
+
 void NameIndex::insert(int index, GISRecord record) {
-  int keyHash = hasher(record.feature_name + record.state_alpha);
+  unsigned int keyHash = elfHash(record.feature_name + record.state_alpha);
   NameNode node = NameNode(record.feature_name, record.state_alpha, index);
   nameMap[keyHash] = node;
   // nameMap[keyHash] = NameNode(record.feature_name, record.state_alpha, index);
 }
 
 std::vector<int> NameIndex::search(std::string feature, std::string state) {
-  int keyHash = hasher(feature + state);
+  unsigned int keyHash = elfHash(feature + state);
   std::vector<int> indices;
   // I dont like auto types but the alternative is just as bad...
   // std::unordered_map<int, int>::iterator
