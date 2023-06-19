@@ -116,9 +116,29 @@ GISRecord BufferPool::search(int index) {
 
 
 
+CoordinateIndex::CoordinateIndex() {}
 
+void CoordinateIndex::insert(int index, GISRecord record) {
+  /**
+   *
+   */
+}
 
+std::vector<int> CoordinateIndex::search() {
+  /**
+   *
+   */
+   std::vector<int> search;
+   return search;
+}
 
+std::string CoordinateIndex::str() {
+  /**
+   *
+   */
+   std::string display = "return";
+   return display;
+}
 
 
 
