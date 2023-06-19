@@ -22,6 +22,9 @@ class NameNode {
 
 class NameIndex {
  private:
+
+  int capacity;
+
   // Temporarily use STD hash class build out NameIndex class
   // Will implement elfhash at later time
   std::hash<std::string> hasher;
@@ -30,7 +33,7 @@ class NameIndex {
   std::unordered_map<unsigned int, NameNode> nameMap;
 
  public:
-  NameIndex();
+  NameIndex(int n);
 
   void insert(int index, GISRecord record);
   std::vector<int> search(std::string feature, std::string state);
