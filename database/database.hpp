@@ -34,6 +34,23 @@ class NameIndex {
   // Will implement hash table at later time
   std::unordered_map<unsigned int, NameNode> nameMap;
 
+  /// Returns the bit index of the most significant bit.
+  /// If the input is zero, it returns zero
+  /// This function will help you locate the crrect good prime in the array below
+  /// It will also help you compute the next power of two
+  static int mostSignificantBit(int x);
+  
+  int quadraticResolution(int i);
+
+  NameNode* buckets;
+  /// Good prime numbers to use as Hashtable sizes
+  /// Copied from https://web.archive.org/web/20120705020114/http://planetmath.org/encyclopedia/GoodHashTablePrimes.html
+  int GoodPrimeNumbers[26] = {53, 97, 193, 389, 769, 1543, 3079, 6151, 12289,
+    24593, 49157, 98317, 196613, 393241, 786433, 1572869, 3145739, 6291469,
+    12582917, 25165843, 50331653, 100663319, 201326611, 402653189,
+    805306457, 1610612741
+};
+
  public:
   NameIndex(int n);
 
