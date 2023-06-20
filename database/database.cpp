@@ -150,13 +150,62 @@ std::string NameIndex::str()   {
 
 BufferPool::BufferPool() {}
 
+void BufferPool::moveToFront(int index) {
+  /**
+   * Moves a recently used item in the buffer pool to the front
+   *
+   * @param index The index of the item to move to the front
+   */
+
+  for (int i = index; i > 0; --i) {
+      std::swap(cache_[i], cache_[i-1]);
+  }
+}
+
 void BufferPool::insert(int index, GISRecord record) {
-  return;
+  /**
+   * Inserts a GIS record ot the top of the dequeue
+   *
+   * @param index The index of the GIS record in the database
+   * @param record The GIS record object
+   */
+
+  // Check if the cache is full before inserting
+  if (cache_.size() == maxPoolSize) {
+    // Cache is full, remove LRU
+    cache_.pop_back();
+  }
+
+  // Insert the new record to the top of the cache
+  cache_.push_front(std::make_pair(index, record));
 }
 
 GISRecord BufferPool::search(int index) {
-    // TODO: Bufferpool
+  /**
+   * Search's for the specified record
+   *
+   * Search's the buffer pool first for the record, then if it's not found the database file is searched.
+   *
+   * @param indices The index of all records to be searched
+   * @return all found records
+   */
+
+  // Search for the key in the cache
   std::cout << "searching buffer pool" << std::endl;
+  for (int i = 0; i < cache_.size(); ++i) {
+      if (cache_[i].first == index) {
+          moveToFront(i);  // Move the item to the top of the cache
+          return cache_[0].second;  // Return the value from the Key/Value pair, which corresponds ot the line from the database
+      }
+  }
+
+  // Key is not in the cache, check if full
+  if (cache_.size() == maxPoolSize) {
+    // Cache is full, remove LRU
+    cache_.pop_back();
+  }
+
+  // Return empty record if nothing is found
   GISRecord rec;
   return rec;
 }
@@ -211,11 +260,20 @@ void Database::saveToFile(std::string line) {
 }
 
 std::vector<GISRecord> Database::getRecords(std::vector<int> indices) {
+  /**
+   * Search's for the specified record
+   *
+   * Search's the buffer pool first for the record, then if it's not found the database file is searched.
+   *
+   * @param indices The index of all records to be searched
+   * @return all found records
+   */
   std::vector<GISRecord> records;
   for (int index : indices) {
     // GISRecord rec;
     GISRecord rec = buffer.search(index);
     if (rec.empty()) {
+        // Record does not exist in buffer pool, search db file instead
       std::string recLine = searchFile(index);
       // std::cout << "recLine: " << recLine << std::endl;
       rec = GISRecord(recLine);

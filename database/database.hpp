@@ -24,9 +24,7 @@ class NameNode {
 
 class NameIndex {
  private:
-
   int capacity;
-
   // Temporarily use STD hash class build out NameIndex class
   // Will implement elfhash at later time
   std::hash<std::string> hasher;
@@ -62,9 +60,12 @@ class NameIndex {
 
 class BufferPool {
  private:
+  const static int maxPoolSize = 15;
+  std::deque<std::pair<int, GISRecord>> cache_; // Double ended queue of Key/Value pairs, where the key is the index corresponding to the database, and the value is the GISRecord
  public:
   BufferPool();
 
+  void moveToFront(int index);
   void insert(int index, GISRecord record);
   GISRecord search(int index);
 
