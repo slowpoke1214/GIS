@@ -1,3 +1,6 @@
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
+
 #include <sstream>
 
 class Logger {
@@ -12,3 +15,5 @@ class Logger {
     void write(std::string command, int commandNumber);
     void writeSeparator();
 };
+
+#endif  // LOGGER_HPP

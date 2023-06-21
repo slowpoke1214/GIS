@@ -7,6 +7,7 @@
 
 #include "../gis_record.hpp"
 #include "../world_systems/region.hpp"
+#include "../logger.hpp"
 
 class NameNode {
  private:
@@ -60,6 +61,7 @@ class NameIndex {
 
 class BufferPool {
  private:
+  Logger logger;
   const static int maxPoolSize = 15;
   std::deque<std::pair<int, GISRecord>> cache_; // Double ended queue of Key/Value pairs, where the key is the index corresponding to the database, and the value is the GISRecord
  public:

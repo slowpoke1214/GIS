@@ -94,7 +94,12 @@ void CommandProcessor::run() {
             } else if (args[0] == "pool") {
               bufferPool.str();
               break;
+            } else if (args[0] == "quad") {
+              // TODO: Debug Quad
+              break;
             }
+            // Unknown value
+            break;
           }
           case Command::what_is:
           {
