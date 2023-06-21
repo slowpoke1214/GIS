@@ -127,28 +127,10 @@ GISRecord BufferPool::search(int index) {
   return rec;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+std::string BufferPool::str() {
+  // TODO: Debug pool
+  return std::string("Buffer Pool Output");
+}
 
 
 Database::Database(std::string dbFile) {
