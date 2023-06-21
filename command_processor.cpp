@@ -7,7 +7,6 @@
 
 #include "command.hpp"
 #include "gis_helpers.hpp"
-#include "database/database.hpp"
 
 void CommandProcessor::initLog() {
   std::stringstream msg;
@@ -93,7 +92,6 @@ void CommandProcessor::run() {
               // TODO: Debug world
               break;
             } else if (args[0] == "pool") {
-              BufferPool bufferPool;
               bufferPool.str();
               break;
             }

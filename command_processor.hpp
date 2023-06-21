@@ -12,6 +12,7 @@ class CommandProcessor {
  private:
   // Instantiate class attributes
   Database database;
+  BufferPool bufferPool;
   std::string databaseFile;
   std::string scriptFile;
   Logger logger;
