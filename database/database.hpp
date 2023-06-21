@@ -71,7 +71,7 @@ class BufferPool {
   void insert(int index, GISRecord record);
   GISRecord search(int index);
 
-  void str();
+  void str(Logger log);
 };
 
 class CoordinateIndex {

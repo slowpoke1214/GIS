@@ -92,7 +92,7 @@ void CommandProcessor::run() {
               // TODO: Debug world
               break;
             } else if (args[0] == "pool") {
-              bufferPool.str();
+              bufferPool.str(logger);
               break;
             } else if (args[0] == "quad") {
               // TODO: Debug Quad

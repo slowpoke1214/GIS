@@ -210,20 +210,20 @@ GISRecord BufferPool::search(int index) {
   return rec;
 }
 
-void BufferPool::str() {
+void BufferPool::str(Logger log) {
   // TODO: Debug pool
 
   // Print the contents of the buffer pool.
   if (!cache_.empty()) {
-      logger.write("MRU");
+      log.write("MRU");
       for (auto it = cache_.rbegin(); it != cache_.rend(); ++it) {
-          logger.write(std::to_string(it->first) + ": " + it->second.str());
+          log.write(std::to_string(it->first) + ": " + it->second.str());
       }
-      logger.write("LRU");
+      log.write("LRU");
   } else {
-      logger.write("Buffer Pool is empty");
+      log.write("Buffer Pool is empty");
   }
-  logger.write("------------------------------------------------------------------------------------------");
+  log.write("------------------------------------------------------------------------------------------");
 }
 
 
