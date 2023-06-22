@@ -148,7 +148,12 @@ std::string NameIndex::str()   {
 
 
 
-BufferPool::BufferPool() {}
+//BufferPool::BufferPool() {}
+
+ BufferPool& BufferPool::getInstance() {
+  static BufferPool instance;
+  return instance;
+}
 
 void BufferPool::moveToFront(int index) {
   /**
@@ -212,12 +217,13 @@ GISRecord BufferPool::search(int index) {
 
 void BufferPool::str(Logger log) {
   // TODO: Debug pool
+  BufferPool& bufferPool = BufferPool::getInstance();
 
   // Print the contents of the buffer pool.
-  if (!cache_.empty()) {
+  if (!bufferPool.cache_.empty()) {
       log.write("MRU");
-      for (auto it = cache_.rbegin(); it != cache_.rend(); ++it) {
-          log.write(std::to_string(it->first) + ": " + it->second.str());
+      for (auto it : bufferPool.cache_) {
+          log.write("\t" + std::to_string(it.first) + ": " + it.second.str());
       }
       log.write("LRU");
   } else {
@@ -225,6 +231,7 @@ void BufferPool::str(Logger log) {
   }
   log.write("------------------------------------------------------------------------------------------");
 }
+
 
 
 Database::Database(std::string dbFile) {
@@ -262,16 +269,17 @@ std::vector<GISRecord> Database::getRecords(std::vector<int> indices) {
    * @return all found records
    */
   std::vector<GISRecord> records;
+  BufferPool& bufferPool = BufferPool::getInstance();
   for (int index : indices) {
     // GISRecord rec;
-    GISRecord rec = buffer.search(index);
+    GISRecord rec = bufferPool.search(index);
     if (rec.empty()) {
         // Record does not exist in buffer pool, search db file instead
       std::string recLine = searchFile(index);
       // std::cout << "recLine: " << recLine << std::endl;
       rec = GISRecord(recLine);
 
-      buffer.insert(index, rec);
+      bufferPool.insert(index, rec);
     }
     records.push_back(rec);
     debugNameIndex();
