@@ -61,17 +61,16 @@ class NameIndex {
 
 class BufferPool {
  private:
-//  BufferPool();
-  Logger logger;
   const static int maxPoolSize = 15;
   std::deque<std::pair<int, GISRecord>> cache_; // Double ended queue of Key/Value pairs, where the key is the index corresponding to the database, and the value is the GISRecord
  public:
-  static BufferPool& getInstance();
+  BufferPool();
+
   void moveToFront(int index);
   void insert(int index, GISRecord record);
   GISRecord search(int index);
 
-  void str(Logger log);
+  std::string str();
 };
 
 class CoordinateIndex {
@@ -90,6 +89,7 @@ class Database {
   std::string databaseFile;
   int indexCount;
 
+  BufferPool buffer;
   NameIndex* nameIndex;
   // CoordinateIndex coordIndex;
 

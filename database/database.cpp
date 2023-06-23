@@ -271,17 +271,16 @@ std::vector<GISRecord> Database::getRecords(std::vector<int> indices) {
    * @return all found records
    */
   std::vector<GISRecord> records;
-  BufferPool& bufferPool = BufferPool::getInstance();
   for (int index : indices) {
     // GISRecord rec;
-    GISRecord rec = bufferPool.search(index);
+    GISRecord rec = buffer.search(index);
     if (rec.empty()) {
         // Record does not exist in buffer pool, search db file instead
       std::string recLine = searchFile(index);
       // std::cout << "recLine: " << recLine << std::endl;
       rec = GISRecord(recLine);
 
-      bufferPool.insert(index, rec);
+      buffer.insert(index, rec);
     }
     records.push_back(rec);
     debugNameIndex();
