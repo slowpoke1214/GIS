@@ -144,10 +144,6 @@ std::string NameIndex::str()   {
 
 
 
-
-
-
-
 BufferPool::BufferPool() {}
 
 void BufferPool::moveToFront(int index) {
@@ -210,23 +206,29 @@ GISRecord BufferPool::search(int index) {
   return rec;
 }
 
+std::string BufferPool::str() {
+  /**
+   * Prints the contents of the buffer pool
+   *
+   * Iterates through the Buffer Pool deque cache and prints each item in order from Most Recently
+   * Used (MRU) to Least Recently Used (LRU).
+   *
+   */
+  std::stringstream r;
 
+  if (!cache_.empty()) {
+      r << "MRU" << std::endl;
+      for (auto it : cache_) {
+          r << "\t" << std::to_string(it.first) << ": " << it.second.str() << std::endl;
+      }
+      r << "LRU" << std::endl;
+  } else {
+      r << "Buffer Pool is empty" << std::endl;
+  }
+  r << "------------------------------------------------------------------------------------------" << std::endl;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  return r.str();
+}
 
 
 
@@ -282,6 +284,7 @@ std::vector<GISRecord> Database::getRecords(std::vector<int> indices) {
     }
     records.push_back(rec);
     debugNameIndex();
+    debugBufferPool();
   }
   return records;
 }
@@ -334,3 +337,8 @@ std::vector<GISRecord> Database::whatIsIn(Region region) {
 std::string Database::debugNameIndex() {
   return nameIndex->str();
 }
+
+std::string Database::debugBufferPool() {
+  return buffer.str();
+}
+
