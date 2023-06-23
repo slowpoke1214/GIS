@@ -112,7 +112,7 @@ void NameIndex::insert(int index, GISRecord record) {
 }
 
 std::vector<int> NameIndex::search(std::string feature, std::string state) {
-  unsigned int keyHash = elfHash(feature + state);
+  unsigned int keyHash = elfHash(feature + state) % capacity;
   std::vector<int> indices;
   // I dont like auto types but the alternative is just as bad...
   // std::unordered_map<int, int>::iterator
