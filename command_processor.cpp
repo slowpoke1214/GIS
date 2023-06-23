@@ -94,7 +94,10 @@ void CommandProcessor::run() {
             } else if (args[0] == "pool") {
               logger.write(database.debugBufferPool());
               break;
-            } else if (args[0] == "quad") {
+            } else if (args[0] == "hash") {
+              logger.write(database.debugNameIndex());
+              break;
+            }else if (args[0] == "quad") {
               // TODO: Debug Quad
               break;
             }
