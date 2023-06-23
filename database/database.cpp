@@ -81,7 +81,7 @@ unsigned int elfHash(const std::string key) {
 }
 
 void NameIndex::insert(int index, GISRecord record) {
-  unsigned int keyHash = elfHash(record.feature_name + record.state_alpha);
+  unsigned int keyHash = elfHash(record.feature_name + record.state_alpha) % capacity;
   NameNode node = NameNode(record.feature_id, record.feature_name, record.state_alpha, index);
   // std::cout << "inserting node:\t" << node.feature_id << "\t" << node.feature_name << "\t" << node.index << "\t" << node.isEmpty  << "\t" << node.state_alpha << std::endl;
   nameMap[keyHash] = node;
