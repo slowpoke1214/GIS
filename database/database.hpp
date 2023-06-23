@@ -108,4 +108,6 @@ class Database {
   std::vector<GISRecord> whatIsIn(Region region);
 
   std::string debugNameIndex();
+
+  std::string debugBufferPool();
 };

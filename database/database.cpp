@@ -144,16 +144,7 @@ std::string NameIndex::str()   {
 
 
 
-
-
-
-
-//BufferPool::BufferPool() {}
-
- BufferPool& BufferPool::getInstance() {
-  static BufferPool instance;
-  return instance;
-}
+BufferPool::BufferPool() {}
 
 void BufferPool::moveToFront(int index) {
   /**
@@ -215,22 +206,33 @@ GISRecord BufferPool::search(int index) {
   return rec;
 }
 
-void BufferPool::str(Logger log) {
-  // TODO: Debug pool
-  BufferPool& bufferPool = BufferPool::getInstance();
+std::string BufferPool::str() {
+  /**
+   * Prints the contents of the buffer pool
+   *
+   * Iterates through the Buffer Pool deque cache and prints each item in order from Most Recently
+   * Used (MRU) to Least Recently Used (LRU).
+   *
+   */
+  std::stringstream r;
 
-  // Print the contents of the buffer pool.
-  if (!bufferPool.cache_.empty()) {
-      log.write("MRU");
-      for (auto it : bufferPool.cache_) {
-          log.write("\t" + std::to_string(it.first) + ": " + it.second.str());
+  if (!cache_.empty()) {
+      r << "MRU" << std::endl;
+      for (auto it : cache_) {
+          r << "\t" << std::to_string(it.first) << ": " << it.second.str() << std::endl;
       }
-      log.write("LRU");
+      r << "LRU" << std::endl;
   } else {
-      log.write("Buffer Pool is empty");
+      r << "Buffer Pool is empty" << std::endl;
   }
-  log.write("------------------------------------------------------------------------------------------");
+  r << "------------------------------------------------------------------------------------------" << std::endl;
+
+  return r.str();
 }
+
+
+
+
 
 
 
@@ -283,6 +285,7 @@ std::vector<GISRecord> Database::getRecords(std::vector<int> indices) {
     }
     records.push_back(rec);
     debugNameIndex();
+    debugBufferPool();
   }
   return records;
 }
@@ -335,3 +338,8 @@ std::vector<GISRecord> Database::whatIsIn(Region region) {
 std::string Database::debugNameIndex() {
   return nameIndex->str();
 }
+
+std::string Database::debugBufferPool() {
+  return buffer.str();
+}
+
