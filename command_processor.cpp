@@ -86,6 +86,24 @@ void CommandProcessor::run() {
             logger.writeSeparator();
             break;
           }
+          case Command::debug:
+          {
+            if (args[0] == "world") {
+              // TODO: Debug world
+              break;
+            } else if (args[0] == "pool") {
+              logger.write(database.debugBufferPool());
+              break;
+            } else if (args[0] == "hash") {
+              logger.write(database.debugNameIndex());
+              break;
+            }else if (args[0] == "quad") {
+              // TODO: Debug Quad
+              break;
+            }
+            // Unknown value
+            break;
+          }
           case Command::what_is:
           {
             std::vector<std::string> records = database.whatIs(args[0], args[1]);
