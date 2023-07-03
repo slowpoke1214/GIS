@@ -94,8 +94,8 @@ class CoordinateIndex {
  public:
   explicit CoordinateIndex(int k);
 
-  void insert(int index, GISRecord record);
-  std::vector<int> search(/* Parameters TBD */);
+  void insert(int index, GISRecord record, world worldBorder);
+  std::vector<int> search(Coordinate coord, world worldBorder);
 
   std::string str();
   std::string visualize();
@@ -119,9 +119,9 @@ class Database {
  public:
   Database(std::string dbFile);
 
-  void insert(std::string recordLine);
+  void insert(std::string recordLine, world worldBorder);
 
-  std::vector<GISRecord> whatIsAt(Coordinate coord);
+  std::vector<GISRecord> whatIsAt(Coordinate coord, world border);
   std::vector<std::string> whatIs(std::string feature, std::string state);
   std::vector<GISRecord> whatIsIn(Region region);
 

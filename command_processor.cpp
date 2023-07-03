@@ -53,7 +53,7 @@ void CommandProcessor::import(std::string filename) {
   std::string line;
   std::getline(file, line);
   while (std::getline(file, line)) {
-    database.insert(line);
+    database.insert(line, worldBorder);
   }
 }
 
@@ -97,7 +97,7 @@ void CommandProcessor::run() {
             } else if (args[0] == "hash") {
               logger.write(database.debugNameIndex());
               break;
-            }else if (args[0] == "quad") {
+            } else if (args[0] == "quad") {
               // TODO: Debug Quad
               break;
             }
@@ -113,7 +113,18 @@ void CommandProcessor::run() {
             }
             logger.writeSeparator();
             break;
+          }
+          case Command::what_is_at:
+          {
+            Coordinate coord = Coordinate(args[0], args[1]);
+            std::vector<GISRecord> records = database.whatIsAt(coord, worldBorder);
+            for (auto &&rec : records)
+            {
+              logger.write(rec.str());
             }
+            logger.writeSeparator();
+            break;
+          }
             
           default: {
             logger.writeSeparator();

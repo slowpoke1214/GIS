@@ -261,7 +261,7 @@ CoordinateIndex::CoordinateIndex(int k) {
   // worldBorder = world
 }
 
-void CoordinateIndex::insert(int index, GISRecord record) {
+void CoordinateIndex::insert(int index, GISRecord record, world worldBorder) {
   /**
    *
    */
@@ -311,7 +311,7 @@ void CoordinateIndex::recursiveInsertPoint(CoordinateIndexNode* node, const Coor
 //    }
 }
 
-std::vector<int> CoordinateIndex::search() {
+std::vector<int> CoordinateIndex::search(Coordinate coord, world worldBorder) {
   /**
    *
    */
@@ -384,12 +384,12 @@ Database::Database(std::string dbFile) {
   // TODO: Create new Quad tree with k = 4
 }
 
-void Database::insert(std::string recordLine) {
+void Database::insert(std::string recordLine, world worldBorder) {
   // GISRecord record;
   GISRecord record(recordLine);
   // TODO: insert to coordinate index
   // TODO: insert to name index
-  coordinateIndex->insert(indexCount, record);
+  coordinateIndex->insert(indexCount, record, worldBorder);
   nameIndex->insert(indexCount, record);
   saveToFile(recordLine);
   indexCount++;
@@ -441,9 +441,10 @@ std::string Database::searchFile(int index) {
   return line;
 }
 
-std::vector<GISRecord> Database::whatIsAt(Coordinate coord) {
+std::vector<GISRecord> Database::whatIsAt(Coordinate coord, world border) {
   // TODO: Search coordinate index
   std::vector<int> indices = {1, 2, 3, 4};
+  coordinateIndex->search(coord, border);
   return getRecords(indices);
 }
 
