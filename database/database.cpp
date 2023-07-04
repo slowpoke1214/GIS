@@ -275,15 +275,32 @@ void CoordinateIndex::insert(int index, GISRecord record, world worldBorder) {
     root = new CoordinateIndexNode();
   }
 
-  // TODO: Check if point is within the world boundary
+  // total seconds values of the records coordinate
+  int recordLatTotalSeconds = DMS(record.primary_lat_dms).totalSeconds();
+  int recordLongTotalSeconds = DMS(record.prim_long_dms).totalSeconds();
 
-  // Create Point
-  CoordinateIndexPoint p;
-  p.index = index;
-  p.record = record;
+  // For testing purposes to view values
+  int top = worldBorder.top().totalSeconds();
+  int bot = worldBorder.bottom().totalSeconds();
+  int left = worldBorder.left().totalSeconds();
+  int right = worldBorder.right().totalSeconds();
 
-  // Recursively insert the point
-  recursiveInsertPoint(root, p);
+  if (worldBorder.top().totalSeconds() >= recordLongTotalSeconds &&
+      worldBorder.bottom().totalSeconds() <= recordLongTotalSeconds &&
+      worldBorder.left().totalSeconds() <= recordLatTotalSeconds &&
+      worldBorder.right().totalSeconds() >= recordLatTotalSeconds) {
+    // The point is within the region bounds
+    // Create Point
+    CoordinateIndexPoint p;
+    p.index = index;
+    p.record = record;
+
+    // Recursively insert the point
+   recursiveInsertPoint(root, p);
+  } else {
+    // The point is outside the region bounds
+    return;
+  }
 }
 
 void CoordinateIndex::recursiveInsertPoint(CoordinateIndexNode* node, const CoordinateIndexPoint& point) {
@@ -300,15 +317,17 @@ void CoordinateIndex::recursiveInsertPoint(CoordinateIndexNode* node, const Coor
     splitNode(node);
   }
 
-  // TODO: Get the quadrant that the point belongs to: returns child node
+  // Get the quadrant that the point belongs to
+  CoordinateIndexNode* child = getQuadrant(node, point);
 
   // Check if the retrieved child node is a leaf
-//    if (child->NW == nullptr && child->NE == nullptr && child->SW == nullptr && child->SE == nullptr) {
-          // If it is, child->points.push_back(point);
-//
-//    } else {
-          // IF it isnt, recursiveInsertPoint(child, point);
-//    }
+  if (child->NW == nullptr && child->NE == nullptr && child->SW == nullptr && child->SE == nullptr) {
+    // If it is a leaf, add the point to its points vector
+    child->points.push_back(point);
+  } else {
+    // If it is not a leaf, recursively insert the point into the child node
+    recursiveInsertPoint(child, point);
+  }
 }
 
 std::vector<int> CoordinateIndex::search(Coordinate coord, world worldBorder) {
@@ -342,16 +361,34 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
       }
 }
 
-CoordinateIndex::CoordinateIndexNode* CoordinateIndex::getQuadrant(CoordinateIndexNode* node, const GISRecord& record) {
+CoordinateIndex::CoordinateIndexNode* CoordinateIndex::getQuadrant(CoordinateIndexNode* node, const CoordinateIndex::CoordinateIndexPoint &point) {
   /**
    * Gets the quadrant a Point belongs to
    */
-  std::string const x = record.prim_long_dms;  // 0800225W
-  std::string const y = record.primary_lat_dms;  //  375754N
+  CoordinateIndexNode* child = nullptr;
 
-  // TODO: get nodes borders
+  // TODO: Correctly determine the quadrant a point belongs to
+  if (int i = 1) {
+    // Point is in the North half
+    if (int i = 1) {
+      // Point is in the North West half
+      child = node->NW;
+    } else {
+      // Point is in the North East half
+      child = node->NE;
+    }
+  } else {
+    // Point is in the South half
+    if (int i = 1) {
+      // Point is in the South West half
+      child = node->SW;
+    } else {
+      // Point is in the South East half
+      child = node->SE;
+    }
+  }
 
-  return nullptr;
+  return child;
 }
 
 std::string CoordinateIndex::str() {

@@ -89,7 +89,7 @@ class CoordinateIndex {
   world worldBorder;
 
   void splitNode(CoordinateIndexNode* node);
-  CoordinateIndexNode* getQuadrant(CoordinateIndexNode* node, const GISRecord& record);
+  CoordinateIndexNode* getQuadrant(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
   void recursiveInsertPoint(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
  public:
   explicit CoordinateIndex(int k);
