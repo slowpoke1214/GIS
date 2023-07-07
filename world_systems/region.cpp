@@ -22,6 +22,19 @@ DMS Region::left() { return bottomLeft.lat; }
 
 DMS Region::right() { return topRight.lat; }
 
+Region Region::NW() {
+  return Region(top(), bottom().half(), right().half(), left());
+};
+Region Region::NE() {
+
+};
+Region Region::SW() {
+
+};
+Region Region::SE() {
+
+};
+
 std::string Region::repr() {
   std::stringstream r;
   std::string centerMsg = "World boundaries are set to:";

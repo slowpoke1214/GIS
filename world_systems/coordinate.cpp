@@ -50,6 +50,20 @@ DMS::DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere) {
   isLat = (hem == Hemisphere::north or hem == Hemisphere::south);
 }
 
+DMS DMS::half() {
+  int tempDeg = deg / 2;
+  int dR = deg % 2;
+
+  min = min + dR * 60;
+  int tempMin = min / 2;
+  int mR = min % 2;
+
+  sec = sec + mR * 60;
+  int tempSec = sec / 2;
+
+  return DMS(tempDeg,tempMin, tempSec, hem);
+}
+
 DMS::DMS(std::string dmsString) {
   // std::cout << "dms constructor;\n" << dmsString << std::endl;
 

@@ -18,6 +18,7 @@ class DMS {
   DMS();
   DMS(int totalSeconds, Hemisphere hemisphere);
   DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere);
+  DMS half();
   DMS(std::string dmsString);
 
   float dd();

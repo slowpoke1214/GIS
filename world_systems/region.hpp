@@ -21,5 +21,10 @@ class Region {
   DMS left();
   DMS right();
 
+  Region NW();
+  Region NE();
+  Region SW();
+  Region SE();
+
   std::string repr();
 };

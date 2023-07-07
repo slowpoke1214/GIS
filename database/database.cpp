@@ -246,7 +246,7 @@ struct CoordinateIndex::CoordinateIndexNode {
   CoordinateIndexNode* SE;  // SE Pointer
   Region nodeBorder;
 
-  CoordinateIndexNode() : NW(nullptr), NE(nullptr), SW(nullptr), SE(nullptr), nodeBorder(DMS(), DMS(), DMS(), DMS()) {}
+  CoordinateIndexNode() : NW(nullptr), NE(nullptr), SW(nullptr), SE(nullptr), nodeBorder() {}
 };
 
 CoordinateIndex::CoordinateIndex(int k) {
@@ -406,7 +406,13 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
       node->SW = new CoordinateIndexNode();
       node->SE = new CoordinateIndexNode();
 
-      // TODO: Set border of new quadrants
+      node->NW->nodeBorder = node->nodeBorder.NW();
+      node->NE->nodeBorder = node->nodeBorder.NE();
+      node->SW->nodeBorder = node->nodeBorder.SW();
+      node->SE->nodeBorder = node->nodeBorder.SE();
+
+
+  // TODO: Set border of new quadrants
       // Send node to function that sets each quadrants size
 
       // Transfer the points from parent node to their respective quadrants
