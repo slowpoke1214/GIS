@@ -14,25 +14,25 @@ Region::Region(DMS northLat, DMS southLat, DMS eastLong, DMS westLong) {
   topRight = Coordinate(eastLong, northLat);
 };
 
-DMS Region::top() { return topRight.lon; }
+DMS Region::top() { return topRight.lat; }
 
-DMS Region::bottom() { return bottomLeft.lon; }
+DMS Region::bottom() { return bottomLeft.lat; }
 
-DMS Region::left() { return bottomLeft.lat; }
+DMS Region::left() { return bottomLeft.lon; }
 
-DMS Region::right() { return topRight.lat; }
+DMS Region::right() { return topRight.lon; }
 
 Region Region::NW() {
-  return Region(top(), bottom().half(), right().half(), left());
+  return Region(top(), bottom().avg(top()), right().avg(left()), left());
 };
 Region Region::NE() {
-
+  return Region(top(), bottom().avg(top()), right(), left().avg(right()));
 };
 Region Region::SW() {
-
+  return Region(top().avg(bottom()), bottom(), right().avg(left()), left());
 };
 Region Region::SE() {
-
+  return Region(top().avg(bottom()), bottom(), right(), left().avg(right()));
 };
 
 std::string Region::repr() {

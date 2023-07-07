@@ -64,6 +64,18 @@ DMS DMS::half() {
   return DMS(tempDeg,tempMin, tempSec, hem);
 }
 
+DMS DMS::avg(DMS rhs){
+  if ((isLatitude() and rhs.isLatitude()) or (isLongitude() and rhs.isLongitude()))
+  {
+    int t = (totalSeconds() + rhs.totalSeconds()) / 2 ;
+    Hemisphere h = abs(totalSeconds()) > abs(rhs.totalSeconds()) ? hemisphere() : rhs.hemisphere();
+    return DMS(t, h);
+  } else
+  {
+    throw std::invalid_argument("Cannot compare a longitude to a latitude");
+  }
+}
+
 DMS::DMS(std::string dmsString) {
   // std::cout << "dms constructor;\n" << dmsString << std::endl;
 

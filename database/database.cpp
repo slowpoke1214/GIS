@@ -288,10 +288,10 @@ void CoordinateIndex::insert(int index, GISRecord record, world worldBorder) {
   int right = worldBorder.right().totalSeconds();
 
   // Ensure point is within global world bounds
-  if (worldBorder.top().totalSeconds() >= recordLongTotalSeconds &&
-      worldBorder.bottom().totalSeconds() <= recordLongTotalSeconds &&
-      worldBorder.left().totalSeconds() <= recordLatTotalSeconds &&
-      worldBorder.right().totalSeconds() >= recordLatTotalSeconds) {
+  if (worldBorder.top().totalSeconds() >= recordLatTotalSeconds &&
+      worldBorder.bottom().totalSeconds() <= recordLatTotalSeconds &&
+      worldBorder.left().totalSeconds() <= recordLongTotalSeconds &&
+      worldBorder.right().totalSeconds() >= recordLongTotalSeconds) {
     // The point is within the region bounds
     // Create Point
     CoordinateIndexPoint p;
@@ -338,9 +338,15 @@ CoordinateIndex::CoordinateIndexNode* CoordinateIndex::getQuadrant(CoordinateInd
    */
   CoordinateIndexNode* child = nullptr;
 
+  // TESTING VALUES
+      int half1 = node->nodeBorder.top().totalSeconds();
+      int half2 = node->nodeBorder.bottom().totalSeconds();
+      int half3 = node->nodeBorder.left().totalSeconds();
+      int half4 = node->nodeBorder.right().totalSeconds();
+
   // Node border centers
-  int borderCenterLat = (node->nodeBorder.left().totalSeconds() + node->nodeBorder.right().totalSeconds()) / 2;  // Horizontal center
-  int borderCenterLong = (node->nodeBorder.bottom().totalSeconds() + node->nodeBorder.top().totalSeconds()) / 2;  // Vertical center
+  int borderCenterLong = (node->nodeBorder.left().totalSeconds() + node->nodeBorder.right().totalSeconds()) / 2;  // Vertical center
+  int borderCenterLat = (node->nodeBorder.bottom().totalSeconds() + node->nodeBorder.top().totalSeconds()) / 2;  // Horizontal center
   // total seconds values of the records coordinate
   int recordLatTotalSeconds = DMS(point.record.primary_lat_dms).totalSeconds();
   int recordLongTotalSeconds = DMS(point.record.prim_long_dms).totalSeconds();
@@ -406,10 +412,45 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
       node->SW = new CoordinateIndexNode();
       node->SE = new CoordinateIndexNode();
 
+      // TESTING VALUES
+      int um = node->nodeBorder.top().totalSeconds();
+      int umm = node->nodeBorder.bottom().totalSeconds();
+      int ummm = node->nodeBorder.left().totalSeconds();
+      int ummmm = node->nodeBorder.right().totalSeconds();
+
+      // TESTING VALUES
+      int half1 = node->nodeBorder.top().half().totalSeconds();
+      int half2 = node->nodeBorder.bottom().half().totalSeconds();
+      int half3 = node->nodeBorder.left().half().totalSeconds();
+      int half4 = node->nodeBorder.right().half().totalSeconds();
+
       node->NW->nodeBorder = node->nodeBorder.NW();
       node->NE->nodeBorder = node->nodeBorder.NE();
       node->SW->nodeBorder = node->nodeBorder.SW();
       node->SE->nodeBorder = node->nodeBorder.SE();
+
+      // TESTING VALUES
+      // NW
+      int hm = node->NW->nodeBorder.top().totalSeconds();
+      int hmm = node->NW->nodeBorder.bottom().totalSeconds();
+      int hmmm = node->NW->nodeBorder.left().totalSeconds();
+      int hmmmm = node->NW->nodeBorder.right().totalSeconds();
+      // NE
+      int dm = node->NE->nodeBorder.top().totalSeconds();
+      int dmm = node->NE->nodeBorder.bottom().totalSeconds();
+      int dmmm = node->NE->nodeBorder.left().totalSeconds();
+      int dmmmm = node->NE->nodeBorder.right().totalSeconds();
+      // SW
+      int fm = node->SW->nodeBorder.top().totalSeconds();
+      int fmm = node->SW->nodeBorder.bottom().totalSeconds();
+      int fmmm = node->SW->nodeBorder.left().totalSeconds();
+      int fmmmm = node->SW->nodeBorder.right().totalSeconds();
+      // SE
+      int tm = node->SE->nodeBorder.top().totalSeconds();
+      int tmm = node->SE->nodeBorder.bottom().totalSeconds();
+      int tmmm = node->SE->nodeBorder.left().totalSeconds();
+      int tmmmm = node->SE->nodeBorder.right().totalSeconds();
+
 
 
   // TODO: Set border of new quadrants
@@ -418,6 +459,8 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
       // Transfer the points from parent node to their respective quadrants
       for ( const CoordinateIndexPoint& p : node->points ) {
         // Get the quadrant that the point belongs to
+        int p1 = DMS(p.record.primary_lat_dms).totalSeconds();
+        int p2 = DMS(p.record.prim_long_dms).totalSeconds();
         CoordinateIndexNode* quadrant = getQuadrant(node, p);
 
         if (quadrant != nullptr) {
