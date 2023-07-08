@@ -478,14 +478,17 @@ std::string CoordinateIndex::str() {
   /**
    * Pre-order traversal of the Quad Tree
    */
-  std::string inorderPrint = inorderTraversal(root, 0);
-//  std::cout << inorderPrint << std::endl;
+  std::string preorderPrint = preorderTraversal(root, 0);
+//  std::cout << preorderPrint << std::endl;
 
-  return inorderPrint;
+  return preorderPrint;
 }
 
-std::string CoordinateIndex::inorderTraversal(CoordinateIndex::CoordinateIndexNode *node, int depth) {
-std::stringstream result;
+std::string CoordinateIndex::preorderTraversal(CoordinateIndex::CoordinateIndexNode *node, int depth) {
+  /**
+   * Preorder Traversal function for printing the Quad Tree's contents
+   */
+  std::stringstream result;
 
   if (node != nullptr) {
     // Print the current node
@@ -504,13 +507,13 @@ std::stringstream result;
     } else {
       // Print the child nodes recursively
       if (node->NW != nullptr)
-        result << inorderTraversal(node->NW, depth + 1);
+        result << preorderTraversal(node->NW, depth + 1);
       if (node->NE != nullptr)
-        result << inorderTraversal(node->NE, depth + 1);
+        result << preorderTraversal(node->NE, depth + 1);
       if (node->SW != nullptr)
-        result << inorderTraversal(node->SW, depth + 1);
+        result << preorderTraversal(node->SW, depth + 1);
       if (node->SE != nullptr)
-        result << inorderTraversal(node->SE, depth + 1);
+        result << preorderTraversal(node->SE, depth + 1);
     }
   }
 

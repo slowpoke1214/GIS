@@ -91,7 +91,7 @@ class CoordinateIndex {
   void splitNode(CoordinateIndexNode* node);
   CoordinateIndexNode* getQuadrant(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
   void recursiveInsertPoint(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
-  std::string inorderTraversal(CoordinateIndexNode* node, int depth);
+  std::string preorderTraversal(CoordinateIndexNode* node, int depth);
  public:
   explicit CoordinateIndex(int k);
 
