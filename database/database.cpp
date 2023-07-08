@@ -95,6 +95,9 @@ unsigned int elfHash(const std::string key) {
 }
 
 void NameIndex::insert(int index, GISRecord record) {
+    if (numInserted / capacity > maxLoad) {
+        rehash();
+    }
   NameNode node = NameNode(record.feature_id, record.feature_name, record.state_alpha, index);
   insert(node);
 }

@@ -32,6 +32,7 @@ class NameIndex {
   void rehash();
   void insert(NameNode &node);
   int numInserted;
+  constexpr static const float maxLoad = 7/10;
 
   // Temporarily use STD unordered map to build out NameIndex class
   // Will implement hash table at later time
