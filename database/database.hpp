@@ -97,7 +97,7 @@ class CoordinateIndex {
 
   void insert(int index, GISRecord record, world worldBorder);
   std::vector<int> what_is_at(Coordinate coord);
-  std::vector<int> what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord);
+  void what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord, std::vector<int>& searchResults);
 
   std::string str();
   std::string visualize();
@@ -123,7 +123,7 @@ class Database {
 
   void insert(std::string recordLine, world worldBorder);
 
-  std::vector<GISRecord> whatIsAt(Coordinate coord);
+  std::vector<std::string> whatIsAt(Coordinate coord);
   std::vector<std::string> whatIs(std::string feature, std::string state);
   std::vector<GISRecord> whatIsIn(Region region);
 

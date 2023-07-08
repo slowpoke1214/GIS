@@ -398,19 +398,18 @@ std::vector<int> CoordinateIndex::what_is_at(Coordinate coord) {
   /**
    *
    */
-   std::vector<int> search = what_is_at_recursive(root, coord);
-   return search;
+   std::vector<int> searchResults;
+   what_is_at_recursive(root, coord, searchResults);
+   return searchResults;
 }
 
-std::vector<int> CoordinateIndex::what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord) {
+void CoordinateIndex::what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord, std::vector<int>& searchResults) {
   /**
    *
    */
 
-  std::vector<int> searchResults;
-
   if (node == nullptr) {
-    return searchResults;
+    return;
   }
 
   if (node->NW == nullptr && node->NE == nullptr && node->SW == nullptr && node->SE == nullptr) {
@@ -425,11 +424,13 @@ std::vector<int> CoordinateIndex::what_is_at_recursive(CoordinateIndexNode* node
     }
   } else {
     // Not a leaf node
-    CoordinateIndexPoint p;
-//    p.record.primary_lat_dms = DMS(coord.lat);
-//    CoordinateIndexNode* child = getQuadrant(node, p);
+    DMS p1 = DMS(coord.lat);
+    DMS p2 = DMS(coord.lon);
+    int lat_secs = p1.totalSeconds();
+    int lon_secs = p2.totalSeconds();
+    CoordinateIndexNode* child = getQuadrant(node, p1, p2);
+    what_is_at_recursive(child, coord, searchResults);
   }
-
 }
 
 
@@ -504,6 +505,7 @@ std::string CoordinateIndex::str() {
    * Pre-order traversal of the Quad Tree
    */
   std::string preorderPrint = preorderTraversal(root, 0);
+  preorderPrint += "------------------------------------------------------------------------------------------";
 //  std::cout << preorderPrint << std::endl;
 
   return preorderPrint;
@@ -621,11 +623,29 @@ std::string Database::searchFile(int index) {
   return line;
 }
 
-std::vector<GISRecord> Database::whatIsAt(Coordinate coord) {
+std::vector<std::string> Database::whatIsAt(Coordinate coord) {
   // TODO: Search coordinate index
-  std::vector<int> indices = {1, 2, 3, 4};
-//  std::vector<int> = coordinateIndex->what_is_at(coord);
-  return getRecords(indices);
+//  std::vector<int> indices = {1, 2, 3, 4};
+  std::vector<int> indices = coordinateIndex->what_is_at(coord);
+  std::vector<std::string> recordStrings;
+  if (!indices.empty()) {
+    std::stringstream str;
+    str << "\t The following feature(s) were found at " + coord.repr();
+    recordStrings.push_back(str.str());
+    std::vector<GISRecord> records = getRecords(indices);
+    for (int i = 0; i < records.size(); i++) {
+      GISRecord rec = records[i];
+      std::stringstream rStr;
+      rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\"  \"" << rec.county_name << "\"  \"" << rec.state_alpha << "\"";
+      recordStrings.push_back(rStr.str());
+    }
+
+  } else {
+    std::stringstream rStr;
+    rStr << "  Nothing was found at " << coord.repr();
+    recordStrings.push_back(rStr.str());
+  }
+  return recordStrings;
 }
 
 std::vector<std::string> Database::whatIs(std::string feature, std::string state) {

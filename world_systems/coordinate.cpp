@@ -15,7 +15,7 @@ Coordinate::Coordinate(DMS longitude, DMS latitude) {
 }
 std::string Coordinate::repr() {
   std::stringstream r;
-  r << "lat: " << lat.repr() << " lon: " << lon.repr() << std::endl;
+  r << "(" << lat.repr() << ", " << lon.repr() << ")" << std::endl;
   return r.str();
 }
 
@@ -140,13 +140,13 @@ Hemisphere stringToHemisphere(std::string str) {
 std::string hemisphereToString(Hemisphere hem) {
   std::string str = "invalid_hemisphere";
   if (hem == Hemisphere::north) {
-    str = "N";
+    str = "North";
   } else if (hem == Hemisphere::south) {
-    str = "S";
+    str = "South";
   } else if (hem == Hemisphere::east) {
-    str = "E";
+    str = "East";
   } else if (hem == Hemisphere::west) {
-    str = "W";
+    str = "West";
   }
   return str;
 }

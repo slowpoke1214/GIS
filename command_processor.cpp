@@ -116,11 +116,12 @@ void CommandProcessor::run() {
           }
           case Command::what_is_at:
           {
-            Coordinate coord = Coordinate(args[0], args[1]);
-            std::vector<GISRecord> records = database.whatIsAt(coord);
+            Coordinate coord = Coordinate(args[1], args[0]);
+            std::vector<std::string> records = database.whatIsAt(coord);
+
             for (auto &&rec : records)
             {
-              logger.write(rec.str());
+              logger.write("\t" + rec);
             }
             logger.writeSeparator();
             break;

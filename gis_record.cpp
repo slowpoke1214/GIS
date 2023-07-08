@@ -89,6 +89,6 @@ GISRecord::GISRecord(const std::string &line) {
 
 GISRecord::~GISRecord() {}
 std::string GISRecord::str() {
-  return "feature name: " + feature_name + ", state: " + state_alpha +
-         ", id: " + std::to_string(feature_id);
+  return "Feature Name: " + feature_name + ", State: " + state_alpha +
+         ", ID: " + std::to_string(feature_id);
 }
