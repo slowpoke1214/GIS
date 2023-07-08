@@ -433,6 +433,17 @@ void CoordinateIndex::what_is_at_recursive(CoordinateIndexNode* node, Coordinate
   }
 }
 
+std::vector<int> CoordinateIndex::what_is_in(Coordinate coord) {
+  /**
+   *
+   */
+
+  // TODO: Where the magic happens.
+  // TODO: How tf do we create a region from the half height and half width parameters. Should those be passed here too? Or should the region be created before it hits this function?
+  std::vector<int> searchResults;
+  return searchResults;
+}
+
 
 void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
   /**
@@ -670,10 +681,33 @@ std::vector<std::string> Database::whatIs(std::string feature, std::string state
   return recordStrings;
 }
 
-std::vector<GISRecord> Database::whatIsIn(Region region) {
-  // TODO: Search coordinate index
-  std::vector<int> indices = {1, 2, 3, 4};
-  return getRecords(indices);
+std::vector<std::string> Database::whatIsIn(Coordinate coord) {
+  // TODO: add the <half_height and width> parameter, and possibly an optional parameter? like pythons **kwargs.
+//  std::vector<int> indices = {1, 2, 3, 4};
+  std::vector<std::string> recordStrings;
+  return recordStrings;
+
+  // TODO: Possibly create the region object here? Then pass only the region object and the additional object to the CoordinateIndex::what_is_in function. Yeah seems best
+  // TODO: Potentially need to have the coordinates here to call coord.repr() for the "The following 1 feature(s) were found in (38d 21m 48s North +/- 15, 79d 31m 9s West +/- 15)" type shit
+//  std::vector<int> indices = coordinateIndex->what_is_in(coord);
+//  if (!indices.empty()) {
+//    std::stringstream str;
+//    str << "\t The following feature(s) were found at " + coord.repr();
+//    recordStrings.push_back(str.str());
+//    std::vector<GISRecord> records = getRecords(indices);
+//    for (int i = 0; i < records.size(); i++) {
+//      GISRecord rec = records[i];
+//      std::stringstream rStr;
+//      rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\"  \"" << rec.county_name << "\"  \"" << rec.state_alpha << "\"";
+//      recordStrings.push_back(rStr.str());
+//    }
+//
+//  } else {
+//    std::stringstream rStr;
+//    rStr << "  Nothing was found at " << coord.repr();
+//    recordStrings.push_back(rStr.str());
+//  }
+//  return recordStrings;
 }
 
 std::string Database::debugNameIndex() {

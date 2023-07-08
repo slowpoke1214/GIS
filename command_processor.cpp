@@ -126,6 +126,25 @@ void CommandProcessor::run() {
             logger.writeSeparator();
             break;
           }
+          case Command::what_is_in:
+          {
+            // TODO: Find a way to pass the additional parameters dynamically:
+            // TODO: Case 1: what_is_in -filter [pop|water|strcuture] <lat> <long> <half-height> <half-width>
+            // TODO: Case 2: what_is_in -long <lat> <long> <half-height> <half-width>
+            // TODO: Case 3: what_is_in <lat> <long> <half-height> <half-width>
+            // The center of the rectangle search area
+//            Coordinate coord = Coordinate(args[1], args[0]);  // TODO: Cant used args[1]/args[2] because of dynamic input
+            Coordinate coord;
+            // TODO: Should create a region object to pass to the what_is_in (Might need to pass the coordinate object first then create a region in CoorindateIndex::what_is_in [Yeah this is prob best, I changed the header files n shit])
+            std::vector<std::string> records = database.whatIsIn(coord);
+
+            for (auto &&rec : records)
+            {
+              logger.write("\t" + rec);
+            }
+            logger.writeSeparator();
+            break;
+          }
             
           default: {
             logger.writeSeparator();
