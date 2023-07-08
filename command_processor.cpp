@@ -136,7 +136,7 @@ void CommandProcessor::run() {
 //            Coordinate coord = Coordinate(args[1], args[0]);  // TODO: Cant used args[1]/args[2] because of dynamic input
             Coordinate coord;
             // TODO: Should create a region object to pass to the what_is_in (Might need to pass the coordinate object first then create a region in CoorindateIndex::what_is_in [Yeah this is prob best, I changed the header files n shit])
-            std::vector<std::string> records = database.whatIsIn(coord);
+            std::vector<std::string> records = database.whatIsIn(coord);  // TODO: Pass optional parameters?
 
             for (auto &&rec : records)
             {
