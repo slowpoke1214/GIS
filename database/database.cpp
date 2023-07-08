@@ -11,14 +11,16 @@ NameNode::NameNode() {
   feature_id = -1;
   feature_name = "";
   state_alpha = "";
+  index = -1;
   isEmpty = true;
 }
 
-NameNode::NameNode(int id, std::string feature, std::string state, int i) : isEmpty(false) {
+NameNode::NameNode(int id, std::string feature, std::string state, int i) {
   feature_id = id;
   feature_name = feature;
   state_alpha = state;
   index = i;
+  isEmpty = false;
 }
 
 NameNode::NameNode(const NameNode & node) {
@@ -28,14 +30,15 @@ NameNode::NameNode(const NameNode & node) {
     feature_name = "";
     state_alpha = "";
     isEmpty = true;
-    return;
-  } 
-
-  feature_id = node.feature_id;
-  feature_name = std::move(node.feature_name);
-  state_alpha = std::move(node.state_alpha);
-  index = node.index;
-  isEmpty = node.isEmpty;
+  } else {
+    feature_id = node.feature_id;
+    feature_name = node.feature_name;
+    state_alpha = node.state_alpha;
+//      feature_name = std::move(node.feature_name);
+//      state_alpha = std::move(node.state_alpha);
+    index = node.index;
+    isEmpty = node.isEmpty;
+  }
 }
 
 
@@ -53,9 +56,20 @@ int NameIndex::quadraticResolution(int i) {
 }
  
 NameIndex::NameIndex(int n) {
-  capacity = GoodPrimeNumbers[mostSignificantBit(n) - 1];
+  capacity = GoodPrimeNumbers[0];
+  for (size_t i = 0; i < numPrimeNumbers; i++)
+  {
+    if (n < GoodPrimeNumbers[i])
+    {
+      capacity = GoodPrimeNumbers[i];
+      capacityPrimeIndex = i;
+      break;
+    }
+  }
+  capacityPrimeIndex++;
   buckets = new NameNode[capacity];
   std::fill_n(buckets, capacity, NameNode());
+  numInserted = 0;
 }
 
 unsigned int elfHash(const std::string key) {
@@ -81,33 +95,47 @@ unsigned int elfHash(const std::string key) {
 }
 
 void NameIndex::insert(int index, GISRecord record) {
-  unsigned int keyHash = elfHash(record.feature_name + record.state_alpha) % capacity;
   NameNode node = NameNode(record.feature_id, record.feature_name, record.state_alpha, index);
-  // std::cout << "inserting node:\t" << node.feature_id << "\t" << node.feature_name << "\t" << node.index << "\t" << node.isEmpty  << "\t" << node.state_alpha << std::endl;
+  insert(node);
+}
+
+void NameIndex::insert(NameNode &node) {
+  if (node.isEmpty)
+  {
+    return;
+  }
+  
+  unsigned int keyHash = elfHash(node.feature_name + node.state_alpha) % capacity;
   nameMap[keyHash] = node;
   int i = 0;
   bool inserted = false;
-  int initialIndex = (keyHash + quadraticResolution(i)) % capacity;
+  int initialIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
   while (!inserted)
   {
     int newIndex = (keyHash + quadraticResolution(i)) % capacity;
-    NameNode b = buckets[newIndex];
-    if (initialIndex == newIndex)
+    NameNode b;
+    b = buckets[newIndex];
+    if (initialIndex == newIndex and i != 0)
     {
       /* Insertion has looped indices, rehash and insert */
-      return;
+      rehash();
+      i = 0;
+     initialIndex = (keyHash + quadraticResolution(i)) % capacity;
+     newIndex = (keyHash + quadraticResolution(i)) % capacity;
+      continue;
     } else if (b.isEmpty)
     {
-      buckets[newIndex] = node;
+      buckets[newIndex] = std::move(node);
       inserted = true;
-    } else if (b.feature_id == record.feature_id)
+      numInserted++;
+    } else if (b.feature_name == node.feature_name and b.state_alpha == node.state_alpha)
     {
       /* Do nothing, already inserted */
       inserted = true;
     }
-     else {
+    else {
       i++;
-    } 
+    }
   }
 }
 
@@ -127,15 +155,43 @@ std::vector<int> NameIndex::search(std::string feature, std::string state) {
   return indices;
 }
 
+void NameIndex::rehash() {
+    capacityPrimeIndex++;
+  if (capacityPrimeIndex < numPrimeNumbers)
+  {
+    int newCapacity = GoodPrimeNumbers[capacityPrimeIndex];
+      NameNode *oldBuckets;
+      oldBuckets = buckets;
+    numInserted = 0;
+    buckets = new NameNode[newCapacity];
+    int originalCap = capacity;
+    for (int i = 0; i < originalCap; i++)
+    {
+        NameNode node;
+       node = std::move(oldBuckets[i]);
+       if (!node.isEmpty)
+      {
+          insert(node);
+      }
+    }
+    capacity = newCapacity;
+  }
+}
+
 std::string NameIndex::str()   {
   std::stringstream r;
-  r << "Format of display is \nSlot number: data record \nCurrent table size is " << capacity << "\nNumber of elements in table is " << nameMap.size() << std::endl;
-  for (auto const& pair : nameMap) {
+  r << "Format of display is \nSlot number: data record \nCurrent table size is " << capacity << "\nNumber of elements in table is " << std::to_string(numInserted) << std::endl;
+  int i;
+  int displayed = 0;
+  for (i = 0; i < capacity; i++) {
     // int keyHash = hasher(pair.first.feature_name + state);
-    NameNode node = pair.second;
-    r << "\t" << pair.first << ": [" << node.feature_name << ":" << node.state_alpha << ", [" << std::to_string(node.index) << "]]\n";
-    // r << "\t" << pair.first << ": [" << node.feature_name << ":" << node.state_alpha << ", [" << std::to_string(node.index) << "]]\tID: " << node.feature_id << "\n";
+    NameNode node = buckets[i];
+    if(!node.isEmpty) {
+        displayed++;
+        r << "\t" << std::to_string(i) << ": [" << node.feature_name << ":" << node.state_alpha << ", [" << std::to_string(node.index) << "]]\n";
+    }
   }
+    std::string s = r.str();
   return r.str();
 }
 
@@ -241,7 +297,7 @@ Database::Database(std::string dbFile) {
   indexCount = 1;
   std::ofstream dbStream(databaseFile);
   dbStream.close();
-  nameIndex = new NameIndex(1000);
+  nameIndex = new NameIndex(10);
 }
 
 void Database::insert(std::string recordLine) {

@@ -29,6 +29,10 @@ class NameIndex {
   // Temporarily use STD hash class build out NameIndex class
   // Will implement elfhash at later time
   std::hash<std::string> hasher;
+  void rehash();
+  void insert(NameNode &node);
+  int numInserted;
+
   // Temporarily use STD unordered map to build out NameIndex class
   // Will implement hash table at later time
   std::unordered_map<unsigned int, NameNode> nameMap;
@@ -42,13 +46,16 @@ class NameIndex {
   int quadraticResolution(int i);
 
   NameNode* buckets;
+    static const int numPrimeNumbers = 26;
   /// Good prime numbers to use as Hashtable sizes
   /// Copied from https://web.archive.org/web/20120705020114/http://planetmath.org/encyclopedia/GoodHashTablePrimes.html
-  int GoodPrimeNumbers[26] = {53, 97, 193, 389, 769, 1543, 3079, 6151, 12289,
+  int GoodPrimeNumbers[numPrimeNumbers] = {53, 97, 193, 389, 769, 1543, 3079, 6151, 12289,
     24593, 49157, 98317, 196613, 393241, 786433, 1572869, 3145739, 6291469,
     12582917, 25165843, 50331653, 100663319, 201326611, 402653189,
     805306457, 1610612741
 };
+// To keep track of which capacity values have been used
+int capacityPrimeIndex;
 
  public:
   NameIndex(int n);
