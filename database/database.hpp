@@ -33,10 +33,11 @@ class NameIndex {
   void insert(NameNode &node);
   int numInserted;
   constexpr static const float maxLoad = 7/10;
+  const static int maxProbes = 5;
 
   // Temporarily use STD unordered map to build out NameIndex class
   // Will implement hash table at later time
-  std::unordered_map<unsigned int, NameNode> nameMap;
+//  std::unordered_map<unsigned int, NameNode> nameMap;
 
   /// Returns the bit index of the most significant bit.
   /// If the input is zero, it returns zero
