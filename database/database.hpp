@@ -89,14 +89,15 @@ class CoordinateIndex {
   world worldBorder;
 
   void splitNode(CoordinateIndexNode* node);
-  CoordinateIndexNode* getQuadrant(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
+  CoordinateIndexNode* getQuadrant(CoordinateIndexNode* node, DMS lat_dms, DMS long_dms);
   void recursiveInsertPoint(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
   std::string preorderTraversal(CoordinateIndexNode* node, int depth);
  public:
   explicit CoordinateIndex(int k);
 
   void insert(int index, GISRecord record, world worldBorder);
-  std::vector<int> search(Coordinate coord, world worldBorder);
+  std::vector<int> what_is_at(Coordinate coord);
+  std::vector<int> what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord);
 
   std::string str();
   std::string visualize();
@@ -122,7 +123,7 @@ class Database {
 
   void insert(std::string recordLine, world worldBorder);
 
-  std::vector<GISRecord> whatIsAt(Coordinate coord, world border);
+  std::vector<GISRecord> whatIsAt(Coordinate coord);
   std::vector<std::string> whatIs(std::string feature, std::string state);
   std::vector<GISRecord> whatIsIn(Region region);
 

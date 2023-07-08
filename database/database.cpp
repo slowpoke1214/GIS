@@ -333,12 +333,14 @@ void CoordinateIndex::recursiveInsertPoint(CoordinateIndexNode* node, const Coor
   } else {
     // If it is not a leaf, recursively insert the point into the child node
     // Get the quadrant that the point belongs to
-    CoordinateIndexNode* child = getQuadrant(node, point);
+    DMS p1 = DMS(point.record.primary_lat_dms);
+    DMS p2 = DMS(point.record.prim_long_dms);
+    CoordinateIndexNode* child = getQuadrant(node, p1, p2);
     recursiveInsertPoint(child, point);
   }
 }
 
-CoordinateIndex::CoordinateIndexNode* CoordinateIndex::getQuadrant(CoordinateIndexNode* node, const CoordinateIndex::CoordinateIndexPoint &point) {
+CoordinateIndex::CoordinateIndexNode* CoordinateIndex::getQuadrant(CoordinateIndexNode* node, DMS lat_dms, DMS long_dms) {
   /**
    * Gets the quadrant a Point belongs to
    */
@@ -354,8 +356,8 @@ CoordinateIndex::CoordinateIndexNode* CoordinateIndex::getQuadrant(CoordinateInd
   int borderCenterLong = (node->nodeBorder.left().totalSeconds() + node->nodeBorder.right().totalSeconds()) / 2;  // Vertical center
   int borderCenterLat = (node->nodeBorder.bottom().totalSeconds() + node->nodeBorder.top().totalSeconds()) / 2;  // Horizontal center
   // total seconds values of the records coordinate
-  int recordLatTotalSeconds = DMS(point.record.primary_lat_dms).totalSeconds();
-  int recordLongTotalSeconds = DMS(point.record.prim_long_dms).totalSeconds();
+  int recordLatTotalSeconds = lat_dms.totalSeconds();
+  int recordLongTotalSeconds = long_dms.totalSeconds();
 
   if (recordLatTotalSeconds <= borderCenterLat) {
     // South Half
@@ -392,19 +394,42 @@ CoordinateIndex::CoordinateIndexNode* CoordinateIndex::getQuadrant(CoordinateInd
   return child;
 }
 
-std::vector<int> CoordinateIndex::search(Coordinate coord, world worldBorder) {
+std::vector<int> CoordinateIndex::what_is_at(Coordinate coord) {
+  /**
+   *
+   */
+   std::vector<int> search = what_is_at_recursive(root, coord);
+   return search;
+}
+
+std::vector<int> CoordinateIndex::what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord) {
   /**
    *
    */
 
+  std::vector<int> searchResults;
 
-  // Check if node is a leaf:
-    // Check if the point is in the list of points
+  if (node == nullptr) {
+    return searchResults;
+  }
 
-  // Find the quadrant the point belongs to, and recursively call search()
+  if (node->NW == nullptr && node->NE == nullptr && node->SW == nullptr && node->SE == nullptr) {
+    // Leaf node, check if any point matches the coordinate
+    for (const CoordinateIndexPoint& point : node->points) {
+      if (
+          DMS(point.record.primary_lat_dms).totalSeconds() == coord.lat.totalSeconds() &&
+          DMS(point.record.prim_long_dms).totalSeconds() == DMS(coord.lon).totalSeconds()) {
+        // Coordinates match, add to array
+        searchResults.push_back(point.index);
+      }
+    }
+  } else {
+    // Not a leaf node
+    CoordinateIndexPoint p;
+//    p.record.primary_lat_dms = DMS(coord.lat);
+//    CoordinateIndexNode* child = getQuadrant(node, p);
+  }
 
-   std::vector<int> search;
-   return search;
 }
 
 
@@ -461,9 +486,9 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
       // Transfer the points from parent node to their respective quadrants
       for ( const CoordinateIndexPoint& p : node->points ) {
         // Get the quadrant that the point belongs to
-        int p1 = DMS(p.record.primary_lat_dms).totalSeconds();
-        int p2 = DMS(p.record.prim_long_dms).totalSeconds();
-        CoordinateIndexNode* quadrant = getQuadrant(node, p);
+        DMS p1 = DMS(p.record.primary_lat_dms);
+        DMS p2 = DMS(p.record.prim_long_dms);
+        CoordinateIndexNode* quadrant = getQuadrant(node, p1, p2);
 
         if (quadrant != nullptr) {
           quadrant->points.push_back(p);
@@ -596,10 +621,10 @@ std::string Database::searchFile(int index) {
   return line;
 }
 
-std::vector<GISRecord> Database::whatIsAt(Coordinate coord, world border) {
+std::vector<GISRecord> Database::whatIsAt(Coordinate coord) {
   // TODO: Search coordinate index
   std::vector<int> indices = {1, 2, 3, 4};
-  coordinateIndex->search(coord, border);
+//  std::vector<int> = coordinateIndex->what_is_at(coord);
   return getRecords(indices);
 }
 

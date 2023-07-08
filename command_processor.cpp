@@ -117,7 +117,7 @@ void CommandProcessor::run() {
           case Command::what_is_at:
           {
             Coordinate coord = Coordinate(args[0], args[1]);
-            std::vector<GISRecord> records = database.whatIsAt(coord, worldBorder);
+            std::vector<GISRecord> records = database.whatIsAt(coord);
             for (auto &&rec : records)
             {
               logger.write(rec.str());
