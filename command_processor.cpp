@@ -98,7 +98,7 @@ void CommandProcessor::run() {
               logger.write(database.debugNameIndex());
               break;
             } else if (args[0] == "quad") {
-              // TODO: Debug Quad
+              logger.write(database.debugCoordinateIndex());
               break;
             }
             // Unknown value

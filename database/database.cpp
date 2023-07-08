@@ -320,6 +320,12 @@ void CoordinateIndex::recursiveInsertPoint(CoordinateIndexNode* node, const Coor
     splitNode(node);
   }
 
+  // NODE BORDER TESTING VALUE
+  int top = node->nodeBorder.top().totalSeconds();
+  int bottom = node->nodeBorder.bottom().totalSeconds();
+  int left = node->nodeBorder.left().totalSeconds();
+  int right = node->nodeBorder.right().totalSeconds();
+
   // Check if the retrieved child node is a leaf
   if (node->NW == nullptr && node->NE == nullptr && node->SW == nullptr && node->SE == nullptr) {
     // If it is a leaf, add the point to its points vector
@@ -424,6 +430,7 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
       int half3 = node->nodeBorder.left().half().totalSeconds();
       int half4 = node->nodeBorder.right().half().totalSeconds();
 
+      // Sets the correct border size of each new quadrant
       node->NW->nodeBorder = node->nodeBorder.NW();
       node->NE->nodeBorder = node->nodeBorder.NE();
       node->SW->nodeBorder = node->nodeBorder.SW();
@@ -451,11 +458,6 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
       int tmmm = node->SE->nodeBorder.left().totalSeconds();
       int tmmmm = node->SE->nodeBorder.right().totalSeconds();
 
-
-
-  // TODO: Set border of new quadrants
-      // Send node to function that sets each quadrants size
-
       // Transfer the points from parent node to their respective quadrants
       for ( const CoordinateIndexPoint& p : node->points ) {
         // Get the quadrant that the point belongs to
@@ -474,11 +476,45 @@ void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
 
 std::string CoordinateIndex::str() {
   /**
-   *
+   * Pre-order traversal of the Quad Tree
    */
+  std::string inorderPrint = inorderTraversal(root, 0);
+//  std::cout << inorderPrint << std::endl;
 
-   std::string display = "return";
-   return display;
+  return inorderPrint;
+}
+
+std::string CoordinateIndex::inorderTraversal(CoordinateIndex::CoordinateIndexNode *node, int depth) {
+std::stringstream result;
+
+  if (node != nullptr) {
+    // Print the current node
+    result << std::string(depth, '\t') << "@\n";
+
+    // Check if the node is a leaf
+    if (node->NW == nullptr && node->NE == nullptr && node->SW == nullptr && node->SE == nullptr) {
+      // Print the leaf node's points
+      result << std::string(depth + 1, '\t') << "* ";
+      for (const CoordinateIndexPoint& point : node->points) {
+        std::string recordLatTotalSeconds = std::to_string(DMS(point.record.primary_lat_dms).totalSeconds());
+        std::string recordLongTotalSeconds = std::to_string(DMS(point.record.prim_long_dms).totalSeconds());
+        result << "[(" + recordLatTotalSeconds << "," << recordLongTotalSeconds << "), " << std::to_string(point.index) << "] ";
+      }
+      result << "\n";
+    } else {
+      // Print the child nodes recursively
+      if (node->NW != nullptr)
+        result << inorderTraversal(node->NW, depth + 1);
+      if (node->NE != nullptr)
+        result << inorderTraversal(node->NE, depth + 1);
+      if (node->SW != nullptr)
+        result << inorderTraversal(node->SW, depth + 1);
+      if (node->SE != nullptr)
+        result << inorderTraversal(node->SE, depth + 1);
+    }
+  }
+
+  return result.str();
 }
 
 std::string CoordinateIndex::visualize() {
@@ -488,8 +524,6 @@ std::string CoordinateIndex::visualize() {
    std::string display = "return";
    return display;
 }
-
-
 
 
 Database::Database(std::string dbFile) {
@@ -600,5 +634,9 @@ std::string Database::debugNameIndex() {
 
 std::string Database::debugBufferPool() {
   return buffer.str();
+}
+
+std::string Database::debugCoordinateIndex() {
+  return coordinateIndex->str();
 }
 

@@ -91,6 +91,7 @@ class CoordinateIndex {
   void splitNode(CoordinateIndexNode* node);
   CoordinateIndexNode* getQuadrant(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
   void recursiveInsertPoint(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
+  std::string inorderTraversal(CoordinateIndexNode* node, int depth);
  public:
   explicit CoordinateIndex(int k);
 
@@ -128,4 +129,6 @@ class Database {
   std::string debugNameIndex();
 
   std::string debugBufferPool();
+
+  std::string debugCoordinateIndex();
 };
