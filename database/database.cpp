@@ -715,10 +715,11 @@ std::string CoordinateIndex::preorderTraversal(CoordinateIndex::CoordinateIndexN
 
 std::string CoordinateIndex::visualize() {
   /**
-   *
+   * Displays the Quad tree in a box view
    */
-   std::string display = "return";
-   return display;
+
+   std::stringstream result;
+   return result.str();
 }
 
 Database::Database(std::string dbFile) {
@@ -956,6 +957,10 @@ std::string Database::debugBufferPool() {
 
 std::string Database::debugCoordinateIndex() {
   return coordinateIndex->str();
+}
+
+std::string Database::debugWorld() {
+  return coordinateIndex->visualize();
 }
 
 int Database::numImported(){

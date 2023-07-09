@@ -143,6 +143,8 @@ class Database {
 
   std::string debugCoordinateIndex();
 
+  std::string debugWorld();
+
   int numImported();
   int avgNameLength();
   int longestProbe();

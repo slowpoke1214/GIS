@@ -97,7 +97,7 @@ void CommandProcessor::run() {
           case Command::debug:
           {
             if (args[0] == "world") {
-              // TODO: Debug world
+              logger.write(database.debugWorld());
               break;
             } else if (args[0] == "pool") {
               logger.write(database.debugBufferPool());
