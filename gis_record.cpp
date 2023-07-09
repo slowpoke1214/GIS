@@ -87,7 +87,7 @@ GISRecord::GISRecord(const std::string &line) {
         << e.what();
    throw std::invalid_argument(err.str());
   }
-    if (prim_long_dms == "Unknown" or primary_lat_dms == "Unknown") {
+    if (prim_long_dms == "Unknown" or primary_lat_dms == "Unknown" or feature_name == "" or state_alpha == "") {
         isEmpty = true;
     }
 }
