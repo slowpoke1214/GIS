@@ -714,8 +714,8 @@ Database::Database(std::string dbFile) {
 void Database::insert(std::string recordLine, world worldBorder) {
   // GISRecord record;
   GISRecord record(recordLine);
-  // TODO: insert to coordinate index
-  // TODO: insert to name index
+  if (record.empty())
+      return;
   coordinateIndex->insert(indexCount, record, worldBorder);
   int lp = nameIndex->insert(indexCount, record);
   saveToFile(recordLine);
