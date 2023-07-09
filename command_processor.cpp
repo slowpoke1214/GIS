@@ -134,8 +134,7 @@ void CommandProcessor::run() {
             logger.writeSeparator();
             break;
           }
-          case Command::what_is_in:
-          {
+          case Command::what_is_in: {
             std::vector<std::string> records;
             if (args[0] == "-filter") {
               // Filter
@@ -163,10 +162,10 @@ void CommandProcessor::run() {
             // TODO: Case 3: what_is_in <lat> <long> <half-height> <half-width>
             // The center of the rectangle search area
 //            Coordinate coord = Coordinate(args[1], args[0]);  // TODO: Cant used args[1]/args[2] because of dynamic input // TODO: Pass optional parameters?
-            for (auto &&rec : records)
-            {
+            for (auto &&rec: records) {
               logger.write("\t" + rec);
             }
+          }
           case Command::quit:
           {
             hasQuit = true;
