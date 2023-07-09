@@ -6,6 +6,7 @@
 #include <string.h>
 #include <sstream>
 #include <stack>
+#include <unordered_set>
 
 NameNode::NameNode() {
   feature_id = -1;
@@ -453,7 +454,46 @@ void CoordinateIndex::what_is_in_recursive(CoordinateIndex::CoordinateIndexNode 
      return;
    }
 
+   // Node border values
+   int nodeBorderTop = node->nodeBorder.top().totalSeconds();
+   int nodeBorderBottom = node->nodeBorder.bottom().totalSeconds();
+   int nodeBorderLeft = node->nodeBorder.left().totalSeconds();
+   int nodeBorderRight = node->nodeBorder.right().totalSeconds();
+
+   // Search border values
+   int searchBorderTop = region.top().totalSeconds();
+   int searchBorderBottom = region.bottom().totalSeconds();
+   int searchBorderLeft = region.left().totalSeconds();
+   int searchBorderRight = region.right().totalSeconds();
+
    // Check if part of the region is within the nodes borders
+   if (searchBorderTop <= nodeBorderTop ||
+       searchBorderBottom >= nodeBorderBottom ||
+       searchBorderLeft <= nodeBorderLeft ||
+       searchBorderRight >= nodeBorderRight) {
+     // Search region is intersecting with the node
+     if (node->NW == nullptr && node->NE == nullptr && node->SW == nullptr && node->SE == nullptr) {
+      // Leaf node, check each node
+      for (const CoordinateIndexPoint& point : node->points) {
+        int recordLatTotalSeconds = DMS(point.record.primary_lat_dms).totalSeconds();
+        int recordLongTotalSeconds = DMS(point.record.prim_long_dms).totalSeconds();
+        // Check if the point is within the search region
+        if (searchBorderTop >= recordLatTotalSeconds &&
+            searchBorderBottom <= recordLatTotalSeconds &&
+            searchBorderLeft <= recordLongTotalSeconds &&
+            searchBorderRight >= recordLongTotalSeconds) {
+          // Point is within the search region, add to result array
+          searchResults.push_back(point.index);
+        }
+      }
+     } else {
+       // Not a leaf node, recursively check all children
+       what_is_in_recursive(node->NW, region, searchResults);
+       what_is_in_recursive(node->NE, region, searchResults);
+       what_is_in_recursive(node->SW, region, searchResults);
+       what_is_in_recursive(node->SE, region, searchResults);
+     }
+   }
 
 }
 
@@ -693,20 +733,97 @@ std::vector<std::string> Database::whatIs(std::string feature, std::string state
 }
 
 std::vector<std::string> Database::what_is_in(Coordinate coord, int halfHeight, int halfWidth) {
-  // TODO: Create region object
   Region region = Region(coord, halfHeight, halfWidth);
-
   std::vector<int> indices = coordinateIndex->what_is_in(region);
-  return std::vector<std::string>();
+  std::vector<std::string> recordStrings;
+  if (!indices.empty()) {
+    std::stringstream str;
+    str << "\t The following " << indices.size() << " feature(s) were found in " + coord.repr(halfHeight, halfWidth);
+    recordStrings.push_back(str.str());
+    std::vector<GISRecord> records = getRecords(indices);
+    for (int i = 0; i < records.size(); i++) {
+      GISRecord rec = records[i];
+      std::stringstream rStr;
+      rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\" " <<  "\"" << rec.state_alpha << "\" " << "\"" << Coordinate(rec.prim_long_dms, rec.primary_lat_dms).repr();
+      recordStrings.push_back(rStr.str());
+    }
+
+  } else {
+    std::stringstream rStr;
+    rStr << "  Nothing was found at " << coord.repr();
+    recordStrings.push_back(rStr.str());
+  }
+  return recordStrings;
 }
 
 std::vector<std::string>
-Database::what_is_in(Coordinate coord, std::string &filterType, int halfHeight, int HalfWidth) {
+Database::what_is_in(Coordinate coord, std::string &filterType, int halfHeight, int halfWidth) {
+  /**
+   * Filter type overload function for what_is_in
+   */
+  // Filter lists
+  std::unordered_set<std::string> structures = {"Airport", "Bridge", "Building", "Church", "Dam", "Hospital", "Levee", "Park", "Post Office", "School", "Tower", "Tunnel"};
+  std::unordered_set<std::string> water = {"Arroyo", "Bay", "Basin", "Bend", "Canal", "Channel", "Falls", "Glacier", "Gut", "Harbor", "Lake", "Rapids", "Reservoir", "Sea", "Spring", "Stream", "Swamp", "Well"};
+  std::unordered_set<std::string> pop = {"Populated Place"};
+  int filterCount = 0;
+
+  Region region = Region(coord, halfHeight, halfWidth);
+  std::vector<int> indices = coordinateIndex->what_is_in(region);
+  std::vector<std::string> recordStrings;
+  if (!indices.empty()) {
+    std::stringstream str;
+    str << "\t The following features matching your criteria were found in " + coord.repr(halfHeight, halfWidth);
+    recordStrings.push_back(str.str());
+    std::vector<GISRecord> records = getRecords(indices);
+    for (int i = 0; i < records.size(); i++) {
+      if ((filterType == "structure" && structures.count(records[i].feature_class) > 0) ||
+          (filterType == "water" && water.count(records[i].feature_class) > 0) ||
+          (filterType == "pop" && pop.count(records[i].feature_class) > 0)) {
+        // Feature Class is within the specified filter
+        GISRecord rec = records[i];
+        std::stringstream rStr;
+        rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\" " <<  "\"" << rec.state_alpha << "\" " << "\"" << Coordinate(rec.prim_long_dms, rec.primary_lat_dms).repr();
+        recordStrings.push_back(rStr.str());
+        filterCount++;
+      }
+    }
+    std::stringstream eStr;
+    eStr << "\t There were " << filterCount << " features of type " << filterType << ".";
+    recordStrings.push_back(eStr.str());
+
+  } else {
+    std::stringstream rStr;
+    rStr << "  Nothing was found at " << coord.repr();
+    recordStrings.push_back(rStr.str());
+  }
+  return recordStrings;
   return std::vector<std::string>();
 }
 
-std::vector<std::string> Database::what_is_in(Coordinate coord, bool longListing, int halfHeight, int HalfWidth) {
-  return std::vector<std::string>();
+std::vector<std::string> Database::what_is_in(Coordinate coord, bool longListing, int halfHeight, int halfWidth) {
+    Region region = Region(coord, halfHeight, halfWidth);
+  std::vector<int> indices = coordinateIndex->what_is_in(region);
+  std::vector<std::string> recordStrings;
+  if (!indices.empty()) {
+    std::stringstream str;
+    str << "\t The following " << indices.size() << " feature(s) were found in " + coord.repr(halfHeight, halfWidth);
+    recordStrings.push_back(str.str());
+    std::vector<GISRecord> records = getRecords(indices);
+    if (longListing) {
+      for (int i = 0; i < records.size(); i++) {
+        GISRecord rec = records[i];
+        std::stringstream rStr;
+        rStr << rec.longList();
+        recordStrings.push_back(rStr.str());
+      }
+    }
+
+  } else {
+    std::stringstream rStr;
+    rStr << "  Nothing was found at " << coord.repr();
+    recordStrings.push_back(rStr.str());
+  }
+  return recordStrings;
 }
 
 //std::vector<std::string> Database::whatIsIn(Coordinate coord) {

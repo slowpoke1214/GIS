@@ -132,8 +132,8 @@ class Database {
   std::vector<std::string> whatIs(std::string feature, std::string state);
   // Overload functions for what_is_in
   std::vector<std::string> what_is_in(Coordinate coord, int halfHeight, int HalfWidth);
-  std::vector<std::string> what_is_in(Coordinate coord, std::string& filterType, int halfHeight, int HalfWidth);
-  std::vector<std::string> what_is_in(Coordinate coord, bool longListing, int halfHeight, int HalfWidth);
+  std::vector<std::string> what_is_in(Coordinate coord, std::string& filterType, int halfHeight, int halfWidth);
+  std::vector<std::string> what_is_in(Coordinate coord, bool longListing, int halfHeight, int halfWidth);
 
   std::string debugNameIndex();
 

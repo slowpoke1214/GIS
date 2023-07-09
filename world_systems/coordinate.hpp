@@ -38,4 +38,5 @@ class Coordinate {
   Coordinate();
   Coordinate(DMS longitude, DMS latitude);
   std::string repr();
+  std::string repr(int halfHeight, int halfWidth);
 };

@@ -13,9 +13,16 @@ Coordinate::Coordinate(DMS longitude, DMS latitude) {
   lon = longitude;
   lat = latitude;
 }
+
 std::string Coordinate::repr() {
   std::stringstream r;
   r << "(" << lat.repr() << ", " << lon.repr() << ")" << std::endl;
+  return r.str();
+}
+
+std::string Coordinate::repr(int halfHeight, int halfWidth) {
+  std::stringstream r;
+  r << "(" << lat.repr() << " +/- " << std::to_string(halfHeight) << ", " << lon.repr() << " +/- " << std::to_string(halfWidth) << ")" << std::endl;
   return r.str();
 }
 
@@ -137,7 +144,7 @@ bool DMS::isLongitude() { return !isLat; }
 
 std::string DMS::repr() {
   std::stringstream r;
-  r << (isLat ^ (abs(deg) > 100) ? "" : "0") << deg << "d " << min << "m "
+  r << (isLat ^ (abs(deg) > 100) ? "" : "") << deg << "d " << min << "m "
     << sec << "s " << hemisphereToString(hem);
   return r.str();
 }

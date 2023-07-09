@@ -1,8 +1,10 @@
 #include "gis_record.hpp"
 
 #include <iostream>
+#include <iomanip>
 
 #include "gis_helpers.hpp"
+#include "world_systems/coordinate.hpp"
 
 GISRecord::GISRecord() { isEmpty = true; }
 
@@ -91,4 +93,31 @@ GISRecord::~GISRecord() {}
 std::string GISRecord::str() {
   return "Feature Name: " + feature_name + ", State: " + state_alpha +
          ", ID: " + std::to_string(feature_id);
+}
+
+std::string GISRecord::longList() {
+  std::stringstream s;
+  if (feature_id) {
+      s << "\t" << std::setw(13) << std::left << "Feature ID" << ": " << feature_id << std::endl;
+  } if (!feature_name.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "Feature Name" << ": " << feature_name << std::endl;
+  } if (!feature_class.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "Feature Cat" << ": " << feature_class << std::endl;
+  } if (!state_alpha.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "State" << ": " << state_alpha << std::endl;
+  } if (!county_name.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "County" << ": " << county_name << std::endl;
+  } if (!prim_long_dms.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "Longitude" << ": " << DMS(prim_long_dms).repr() << std::endl;
+  } if (!primary_lat_dms.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "Latitude" << ": " << DMS(primary_lat_dms).repr() << std::endl;
+  } if (elev_in_ft) {
+      s << "\t\t" << std::setw(13) << std::left << "Elev in ft" << ": " << elev_in_ft << std::endl;
+  } if (!map_name.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "USGS Quad" << ": " << map_name << std::endl;
+  } if (!date_created.empty()) {
+      s << "\t\t" << std::setw(13) << std::left << "Date Created" << ": " << date_created << std::endl;
+  }
+//  s << (std::to_string(feature_id).empty() ? "" : (std::setw(12) + "Feature ID" + std::to_string(feature_id)));
+  return s.str();
 }
