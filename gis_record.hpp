@@ -8,7 +8,6 @@ const int NumGISRecordFields = 20;
 
 class GISRecord {
  private:
-  std::string feature_class;
   std::string state_numeric;
   std::string county_numeric;
   double prim_lat_dec;
@@ -31,12 +30,14 @@ class GISRecord {
   GISRecord(const std::string &line);
   ~GISRecord();
   int feature_id;
+  std::string feature_class;
   std::string feature_name;
   std::string state_alpha;
   std::string county_name;
   std::string primary_lat_dms;
   std::string prim_long_dms;
   std::string str();
+  std::string longList();
 
   bool empty();
 };

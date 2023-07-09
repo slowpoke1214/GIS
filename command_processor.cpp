@@ -53,7 +53,7 @@ void CommandProcessor::import(std::string filename) {
   std::string line;
   std::getline(file, line);
   while (std::getline(file, line)) {
-    database.insert(line);
+    database.insert(line, worldBorder);
   }
   std::stringstream out;
   out <<
@@ -105,8 +105,8 @@ void CommandProcessor::run() {
             } else if (args[0] == "hash") {
               logger.write(database.debugNameIndex());
               break;
-            }else if (args[0] == "quad") {
-              // TODO: Debug Quad
+            } else if (args[0] == "quad") {
+              logger.write(database.debugCoordinateIndex());
               break;
             }
             // Unknown value
@@ -121,6 +121,51 @@ void CommandProcessor::run() {
             }
             logger.writeSeparator();
             break;
+          }
+          case Command::what_is_at:
+          {
+            Coordinate coord = Coordinate(args[1], args[0]);
+            std::vector<std::string> records = database.whatIsAt(coord);
+
+            for (auto &&rec : records)
+            {
+              logger.write("\t" + rec);
+            }
+            logger.writeSeparator();
+            break;
+          }
+          case Command::what_is_in:
+          {
+            std::vector<std::string> records;
+            if (args[0] == "-filter") {
+              // Filter
+              Coordinate coord = Coordinate(args[3], args[2]);
+              std::string filterType = args[1];
+              int halfHeight = std::stoi(args[4]);
+              int halfWidth = std::stoi(args[5]);
+              records = database.what_is_in(coord, filterType, halfHeight, halfWidth);
+            } else if (args[0] == "-long") {
+              // Long Listing
+              Coordinate coord = Coordinate(args[2], args[1]);
+              int halfHeight = std::stoi(args[3]);
+              int halfWidth = std::stoi(args[4]);
+              records = database.what_is_in(coord, true, halfHeight, halfWidth);
+            } else {
+              // Defualt usage
+              Coordinate coord = Coordinate(args[1], args[0]);
+              int halfHeight = std::stoi(args[2]);
+              int halfWidth = std::stoi(args[3]);
+              records = database.what_is_in(coord, halfHeight, halfWidth);
+            }
+            // TODO: Find a way to pass the additional parameters dynamically:
+            // TODO: Case 1: what_is_in -filter [pop|water|strcuture] <lat> <long> <half-height> <half-width>
+            // TODO: Case 2: what_is_in -long <lat> <long> <half-height> <half-width>
+            // TODO: Case 3: what_is_in <lat> <long> <half-height> <half-width>
+            // The center of the rectangle search area
+//            Coordinate coord = Coordinate(args[1], args[0]);  // TODO: Cant used args[1]/args[2] because of dynamic input // TODO: Pass optional parameters?
+            for (auto &&rec : records)
+            {
+              logger.write("\t" + rec);
             }
           case Command::quit:
           {

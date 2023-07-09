@@ -15,7 +15,7 @@ class Region {
   Coordinate topRight;
 
  public:
-  // Region(Coordinate bottomLeft, float height, float width);
+  Region(Coordinate center, int halfHeight, int halfWidth);
   Region();
   Region(DMS northLat, DMS southLat, DMS eastLong, DMS westLong);
 
@@ -23,6 +23,11 @@ class Region {
   DMS bottom();
   DMS left();
   DMS right();
+
+  Region NW();
+  Region NE();
+  Region SW();
+  Region SE();
 
   std::string repr();
 };

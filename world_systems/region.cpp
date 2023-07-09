@@ -14,13 +14,40 @@ Region::Region(DMS northLat, DMS southLat, DMS eastLong, DMS westLong) {
   topRight = Coordinate(eastLong, northLat);
 };
 
-DMS Region::top() { return topRight.lon; }
+Region::Region(Coordinate center, int halfHeight, int halfWidth) {
+  // Creates a region from a center point and height and width
+  DMS lat = center.lat;
+  DMS lon = center.lon;
 
-DMS Region::bottom() { return bottomLeft.lon; }
+  DMS top = DMS(lat.totalSeconds() + halfHeight, true);
+  DMS bottom = DMS(lat.totalSeconds() - halfHeight, true);
+  DMS left = DMS(lon.totalSeconds() - halfWidth, false);
+  DMS right = DMS(lon.totalSeconds() + halfWidth, false);
 
-DMS Region::left() { return bottomLeft.lat; }
+  bottomLeft = Coordinate(left, bottom);
+  topRight = Coordinate(right, top);
+}
 
-DMS Region::right() { return topRight.lat; }
+DMS Region::top() { return topRight.lat; }
+
+DMS Region::bottom() { return bottomLeft.lat; }
+
+DMS Region::left() { return bottomLeft.lon; }
+
+DMS Region::right() { return topRight.lon; }
+
+Region Region::NW() {
+  return Region(top(), bottom().avg(top()), right().avg(left()), left());
+};
+Region Region::NE() {
+  return Region(top(), bottom().avg(top()), right(), left().avg(right()));
+};
+Region Region::SW() {
+  return Region(top().avg(bottom()), bottom(), right().avg(left()), left());
+};
+Region Region::SE() {
+  return Region(top().avg(bottom()), bottom(), right(), left().avg(right()));
+};
 
 std::string Region::repr() {
   std::stringstream r;

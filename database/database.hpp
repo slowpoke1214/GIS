@@ -12,6 +12,8 @@
 #include "../world_systems/region.hpp"
 #include "../logger.hpp"
 
+using world = Region;
+
 class NameNode {
  private:
  public:
@@ -75,13 +77,35 @@ class BufferPool {
 
 class CoordinateIndex {
  private:
- public:
-  CoordinateIndex();
+  struct CoordinateIndexPoint;
+  struct CoordinateIndexNode;
 
-  void insert(int index, GISRecord record);
-  std::vector<int> search(/* Parameters TBD */);
+  CoordinateIndexNode* root;
+//  CoordinateIndexNode* NW;
+//  CoordinateIndexNode* NE;
+//  CoordinateIndexNode* SW;
+//  CoordinateIndexNode* SE;
+  int leafCapacity;
+  world worldBorder;
+
+  void splitNode(CoordinateIndexNode* node);
+  CoordinateIndexNode* getQuadrant(CoordinateIndexNode* node, DMS lat_dms, DMS long_dms);
+  void recursiveInsertPoint(CoordinateIndexNode* node, const CoordinateIndexPoint& point);
+  void what_is_in_recursive(CoordinateIndexNode* node, Region region, std::vector<int>& searchResults);
+  void what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord, std::vector<int>& searchResults);
+  std::string preorderTraversal(CoordinateIndexNode* node, int depth);
+ public:
+  explicit CoordinateIndex(int k);
+
+  void insert(int index, GISRecord record, world worldBorder);
+  std::vector<int> what_is_at(Coordinate coord);
+
+  // Overload functions for what_is_in
+  std::vector<int> what_is_in(Region region);
+
 
   std::string str();
+  std::string visualize();
 };
 
 class Database {
@@ -94,6 +118,7 @@ class Database {
 
   BufferPool buffer;
   NameIndex* nameIndex;
+  CoordinateIndex* coordinateIndex;
   // CoordinateIndex coordIndex;
 
   void saveToFile(std::string line);
@@ -103,15 +128,21 @@ class Database {
  public:
   Database(std::string dbFile);
 
-  void insert(std::string recordLine);
+  void insert(std::string recordLine, world worldBorder);
 
-  std::vector<GISRecord> whatIsAt(Coordinate coord);
+  std::vector<std::string> whatIsAt(Coordinate coord);
   std::vector<std::string> whatIs(std::string feature, std::string state);
-  std::vector<GISRecord> whatIsIn(Region region);
+  // Overload functions for what_is_in
+  std::vector<std::string> what_is_in(Coordinate coord, int halfHeight, int HalfWidth);
+  std::vector<std::string> what_is_in(Coordinate coord, std::string& filterType, int halfHeight, int halfWidth);
+  std::vector<std::string> what_is_in(Coordinate coord, bool longListing, int halfHeight, int halfWidth);
 
   std::string debugNameIndex();
 
   std::string debugBufferPool();
+
+  std::string debugCoordinateIndex();
+
   int numImported();
   int avgNameLength();
   int longestProbe();

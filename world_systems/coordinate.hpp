@@ -20,7 +20,10 @@ class DMS {
  public:
   DMS();
   DMS(int totalSeconds, Hemisphere hemisphere);
+  DMS(int totalSeconds, bool isLatitude);
   DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere);
+  DMS half();
+  DMS avg(DMS rhs);
   DMS(std::string dmsString);
 
   float dd();
@@ -38,6 +41,7 @@ class Coordinate {
   Coordinate();
   Coordinate(DMS longitude, DMS latitude);
   std::string repr();
+  std::string repr(int halfHeight, int halfWidth);
 };
 
 # endif // COORDINATE_HPP
