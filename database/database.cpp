@@ -947,5 +947,6 @@ std::string CoordinateIndex::visualizeRecursive(CoordinateIndex::CoordinateIndex
   }
 
 
-  std::stringstream result;
+  std::string result;
+  return result;
 }
