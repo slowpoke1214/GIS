@@ -5,7 +5,7 @@
 #include <string>
 
 #include "logger.hpp"
-// #include "world_systems/region.hpp"
+#include "world_systems/region.hpp"
 // #include "world.hpp"
 #include "database/database.hpp"
 
