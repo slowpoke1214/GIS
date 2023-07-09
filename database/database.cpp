@@ -229,11 +229,11 @@ std::vector<int> NameIndex::search(std::string feature, std::string state) {
             currentPos = (keyHash + quadraticResolution(offset)) % capacity; // Compute ith probe
         }
     }
-    std::cout << "did not find in these hash indices" << std::to_string(searchedHashs.size()) << "\tpossible: " << std::to_string(capacity) << std::endl;
+//    std::cout << "did not find in these hash indices" << std::to_string(searchedHashs.size()) << "\tpossible: " << std::to_string(capacity) << std::endl;
 
-    for (int i: searchedHashs) {
-        std::cout << std::to_string(i) << std::endl;
-    }
+//    for (int i: searchedHashs) {
+//        std::cout << std::to_string(i) << std::endl;
+//    }
     if (indices.empty()) {
         for (int i = 0; i < capacity; ++i) {
             NameNode node = buckets[i];
@@ -454,7 +454,7 @@ std::vector<GISRecord> Database::whatIsAt(Coordinate coord) {
 }
 
 std::vector<std::string> Database::whatIs(std::string feature, std::string state) {
-  std::cout << "What is that? " << feature << ", " << state << std::endl;
+//  std::cout << "What is that? " << feature << ", " << state << std::endl;
   std::vector<int> indices = nameIndex->search(feature, state);
   std::vector<std::string> recordStrings;
   if (!indices.empty()) {
