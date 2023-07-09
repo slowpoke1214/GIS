@@ -49,7 +49,7 @@ CommandProcessor::CommandProcessor(std::string db, std::string script,
 
 void CommandProcessor::import(std::string filename) {
   std::ifstream file(filename);
-
+  database.resetImportStats();
   std::string line;
   std::getline(file, line);
   while (std::getline(file, line)) {

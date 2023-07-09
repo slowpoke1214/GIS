@@ -443,3 +443,8 @@ int Database::avgNameLength(){
 int Database::longestProbe() {
     return longestP;
 }
+void Database::resetImportStats() {
+    numInserted = 0;
+    totalNameLength = 0;
+    longestP = 0;
+}
