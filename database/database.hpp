@@ -94,6 +94,7 @@ class CoordinateIndex {
   void what_is_in_recursive(CoordinateIndexNode* node, Region region, std::vector<int>& searchResults);
   void what_is_at_recursive(CoordinateIndexNode* node, Coordinate coord, std::vector<int>& searchResults);
   std::string preorderTraversal(CoordinateIndexNode* node, int depth);
+  std::string visualizeRecursive(CoordinateIndexNode* node, int resolution);
  public:
   explicit CoordinateIndex(int k);
 

@@ -717,8 +717,12 @@ std::string CoordinateIndex::visualize() {
    * Displays the Quad tree in a box view
    */
 
-   std::stringstream result;
-   return result.str();
+   std::string result = visualizeRecursive(root, 0);
+   return result;
+}
+
+std::string CoordinateIndex::visualizeRecursive(CoordinateIndex::CoordinateIndexNode *node, int resolution) {
+  std::stringstream result;
 }
 
 Database::Database(std::string dbFile) {
