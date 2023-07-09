@@ -70,7 +70,7 @@ void CommandProcessor::run() {
 
   if (scriptStream) {
     bool hasQuit = false;
-    while (std::getline(scriptStream, commandString)) {
+    while (std::getline(scriptStream, commandString) and !hasQuit) {
       std::vector<std::string> commandTokens =
           helpers::splitString(commandString, scriptDelimeter);
 
@@ -78,7 +78,7 @@ void CommandProcessor::run() {
       std::vector<std::string> args(commandTokens.begin() + 1,
                                     commandTokens.end());
 
-      if (command == Command::comment or hasQuit) {
+      if (command == Command::comment) {
         logger.write(commandString);
         continue;
       } else {
@@ -98,18 +98,15 @@ void CommandProcessor::run() {
           {
             if (args[0] == "world") {
               logger.write(database.debugWorld());
-              break;
             } else if (args[0] == "pool") {
               logger.write(database.debugBufferPool());
-              break;
             } else if (args[0] == "hash") {
               logger.write(database.debugNameIndex());
-              break;
             } else if (args[0] == "quad") {
               logger.write(database.debugCoordinateIndex());
-              break;
             }
             // Unknown value
+            logger.writeSeparator();
             break;
           }
           case Command::what_is:
@@ -165,12 +162,14 @@ void CommandProcessor::run() {
             for (auto &&rec: records) {
               logger.write("\t" + rec);
             }
+            logger.writeSeparator();
             break;
           }
           case Command::quit:
           {
             hasQuit = true;
             logger.write("Terminating execution of commands.");
+            logger.writeSeparator();
             break;
           }
           default: {
