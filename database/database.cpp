@@ -113,10 +113,10 @@ void NameIndex::insert(NameNode &node) {
 //  nameMap[keyHash] = node;
   int i = 0;
   bool inserted = false;
-  int initialIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
+  int initialIndex = (keyHash + quadraticResolution(i)) % capacity;
   while (!inserted and maxProbes > i)
   {
-    int newIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
+    int newIndex = (keyHash + quadraticResolution(i)) % capacity;
     NameNode b;
     b = buckets[newIndex];
     if ((initialIndex == newIndex and i != 0))
@@ -126,8 +126,8 @@ void NameIndex::insert(NameNode &node) {
       rehash();
      i = 0;
     //  i++;
-     initialIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
-     newIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
+     initialIndex = (keyHash + quadraticResolution(i)) % capacity;
+     newIndex = (keyHash + quadraticResolution(i)) % capacity;
       continue;
     } else if (b.isEmpty)
     {
@@ -215,34 +215,32 @@ std::vector<int> NameIndex::search(std::string feature, std::string state) {
     std::vector<int> searchedHashs;
     std::string key = feature + state;
     int offset = 0;
-    int currentPos = (keyHash + quadraticResolution(offset) % capacity) % capacity;
-//    int currentPos = hash(key, offset);
+    int currentPos = (keyHash + quadraticResolution(offset)) % capacity;
     NameNode node = buckets[currentPos];
     while( offset < capacity and offset < maxProbes)
     {
         node = buckets[currentPos];
-//        if ((tolower(node.feature_name) != tolower(feature)) && (tolower(node.state_alpha) != tolower(state))) {
         if (!node.isEmpty && (node.feature_name == feature) && (node.state_alpha == state)) {
             indices.push_back(node.index);
             break;
         } else {
             searchedHashs.push_back(node.feature_id);
             offset += 1;
-//            currentPos = hash(key, offset); // Compute ith probe
-            currentPos = (keyHash + quadraticResolution(offset) % capacity) % capacity; // Compute ith probe
+            currentPos = (keyHash + quadraticResolution(offset)) % capacity; // Compute ith probe
         }
-        // if( currentPos >= capacity )
-        //     currentPos -= capacity;
     }
-//    for(i = 0; i < capacity; i++) {
-//        NameNode node = buckets[i];
-//        std::cout
-//    }
-//    indices.push_back(offset);
-    std::cout << "did not find in these hash indices" << std::to_string(searchedHashs.size()) << std::endl;
+    std::cout << "did not find in these hash indices" << std::to_string(searchedHashs.size()) << "\tpossible: " << std::to_string(capacity) << std::endl;
 
     for (int i: searchedHashs) {
         std::cout << std::to_string(i) << std::endl;
+    }
+    if (indices.empty()) {
+        for (int i = 0; i < capacity; ++i) {
+            NameNode node = buckets[i];
+            if (!node.isEmpty and node.state_alpha == state and node.feature_name == feature) {
+                indices.push_back(node.index);
+            }
+        }
     }
     return indices;
 }
