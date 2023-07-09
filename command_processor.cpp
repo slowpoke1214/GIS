@@ -98,18 +98,15 @@ void CommandProcessor::run() {
           {
             if (args[0] == "world") {
               // TODO: Debug world
-              break;
             } else if (args[0] == "pool") {
               logger.write(database.debugBufferPool());
-              break;
             } else if (args[0] == "hash") {
               logger.write(database.debugNameIndex());
-              break;
             } else if (args[0] == "quad") {
               logger.write(database.debugCoordinateIndex());
-              break;
             }
             // Unknown value
+            logger.writeSeparator();
             break;
           }
           case Command::what_is:
@@ -165,6 +162,7 @@ void CommandProcessor::run() {
             for (auto &&rec: records) {
               logger.write("\t" + rec);
             }
+            logger.writeSeparator();
             break;
           }
           case Command::quit:

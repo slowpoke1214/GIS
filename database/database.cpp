@@ -325,11 +325,10 @@ std::string BufferPool::str() {
       for (auto it : cache_) {
           r << "\t" << std::to_string(it.first) << ": " << it.second.str() << std::endl;
       }
-      r << "LRU" << std::endl;
+      r << "LRU" << std::flush;
   } else {
-      r << "Buffer Pool is empty" << std::endl;
+      r << "Buffer Pool is empty" << std::flush;
   }
-  r << "------------------------------------------------------------------------------------------" << std::endl;
   return r.str();
 
 }
@@ -783,13 +782,13 @@ std::vector<std::string> Database::whatIsAt(Coordinate coord) {
   std::vector<std::string> recordStrings;
   if (!indices.empty()) {
     std::stringstream str;
-    str << "\t The following feature(s) were found at " + coord.repr();
+    str << "  The following feature(s) were found at " + coord.repr();
     recordStrings.push_back(str.str());
     std::vector<GISRecord> records = getRecords(indices);
     for (int i = 0; i < records.size(); i++) {
       GISRecord rec = records[i];
       std::stringstream rStr;
-      rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\"  \"" << rec.county_name << "\"  \"" << rec.state_alpha << "\"";
+      rStr << "\t" << indices[i] << ":  \"" << rec.feature_name << "\" \"" << rec.county_name << "\" \"" << rec.state_alpha << "\"";
       recordStrings.push_back(rStr.str());
     }
 
@@ -810,7 +809,7 @@ std::vector<std::string> Database::whatIs(std::string feature, std::string state
     for (int i = 0; i < records.size(); i++) {
       GISRecord rec = records[i];
       std::stringstream rStr;
-      rStr << "  " << indices[i] << ":  " << rec.county_name << "  (" << rec.primary_lat_dms << ", " << rec.prim_long_dms << ")";
+      rStr << "  " << indices[i] << ":  " << rec.county_name << "  " << Coordinate(rec.prim_long_dms, rec.primary_lat_dms).repr() << std::flush;
       recordStrings.push_back(rStr.str());
     }
 
@@ -841,7 +840,7 @@ std::vector<std::string> Database::what_is_in(Coordinate coord, int halfHeight, 
 
   } else {
     std::stringstream rStr;
-    rStr << "  Nothing was found at " << coord.repr();
+    rStr << "  Nothing was found in " << coord.repr();
     recordStrings.push_back(rStr.str());
   }
   return recordStrings;
