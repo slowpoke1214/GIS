@@ -7,7 +7,6 @@
 
 #include "../gis_record.hpp"
 #include "../world_systems/region.hpp"
-#include "../logger.hpp"
 
 class NameNode {
  private:
@@ -25,17 +24,12 @@ class NameNode {
 
 class NameIndex {
  private:
+
   int capacity;
+
   // Temporarily use STD hash class build out NameIndex class
   // Will implement elfhash at later time
   std::hash<std::string> hasher;
-  void rehash();
-  void insert(NameNode &node);
-  int numInserted;
-  constexpr static const float maxLoad = 0.7;
-    const static int maxProbes = 100;
-  int hash(std::string key, int offset);
-
   // Temporarily use STD unordered map to build out NameIndex class
   // Will implement hash table at later time
 //  std::unordered_map<unsigned int, NameNode> nameMap;
@@ -49,16 +43,13 @@ class NameIndex {
   int quadraticResolution(int i);
 
   NameNode* buckets;
-    static const int numPrimeNumbers = 26;
   /// Good prime numbers to use as Hashtable sizes
   /// Copied from https://web.archive.org/web/20120705020114/http://planetmath.org/encyclopedia/GoodHashTablePrimes.html
-  int GoodPrimeNumbers[numPrimeNumbers] = {53, 97, 193, 389, 769, 1543, 3079, 6151, 12289,
+  int GoodPrimeNumbers[26] = {53, 97, 193, 389, 769, 1543, 3079, 6151, 12289,
     24593, 49157, 98317, 196613, 393241, 786433, 1572869, 3145739, 6291469,
     12582917, 25165843, 50331653, 100663319, 201326611, 402653189,
     805306457, 1610612741
 };
-// To keep track of which capacity values have been used
-int capacityPrimeIndex;
 
  public:
   NameIndex(int n);
@@ -71,12 +62,9 @@ int capacityPrimeIndex;
 
 class BufferPool {
  private:
-  const static int maxPoolSize = 15;
-  std::deque<std::pair<int, GISRecord>> cache_; // Double ended queue of Key/Value pairs, where the key is the index corresponding to the database, and the value is the GISRecord
  public:
   BufferPool();
 
-  void moveToFront(int index);
   void insert(int index, GISRecord record);
   GISRecord search(int index);
 
@@ -118,6 +106,4 @@ class Database {
   std::vector<GISRecord> whatIsIn(Region region);
 
   std::string debugNameIndex();
-
-  std::string debugBufferPool();
 };
