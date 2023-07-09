@@ -1,3 +1,6 @@
+# ifndef COMMAND_HPP
+# define COMMAND_HPP
+
 #include <string>
 enum class Command {
   world,
@@ -13,3 +16,5 @@ enum class Command {
 
 Command stringToCommand(std::string str);
 std::string commandToString(Command cmd);
+
+# endif // COMMAND_HPP

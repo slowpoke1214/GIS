@@ -1,3 +1,6 @@
+# ifndef SYSTEMMANAGER_HPP
+# define SYSTEMMANAGER_HPP
+
 #include <string>
 #include <tuple>
 
@@ -10,3 +13,5 @@ class SystemManager {
     static std::tuple<std::string, std::string, std::string> verifyArguments(
         int argc, char* argv[]);
 };
+
+# endif // SYSTEMMANAGER_HPP

@@ -1,3 +1,6 @@
+# ifndef DATABASE_HPP
+# define DATABASE_HPP
+
 #include <functional>
 #include <queue>
 #include <string>
@@ -113,3 +116,5 @@ class Database {
   int avgNameLength();
   int longestProbe();
 };
+
+# endif // DATABASE_HPP

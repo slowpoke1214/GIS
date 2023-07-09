@@ -1,3 +1,6 @@
+# ifndef COMMANDPROCESSOR_H
+# define COMMANDPROCESSOR_H
+
 #include <fstream>
 #include <string>
 
@@ -33,3 +36,5 @@ class CommandProcessor {
 
   void run();
 };
+
+# endif // COMMANDPROCESSOR_H
