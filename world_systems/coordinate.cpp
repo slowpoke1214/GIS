@@ -16,7 +16,7 @@ Coordinate::Coordinate(DMS longitude, DMS latitude) {
 
 std::string Coordinate::repr() {
   std::stringstream r;
-  r << "(" << lat.repr() << ", " << lon.repr() << ")" << std::endl;
+  r << "(" << lat.repr() << ", " << lon.repr() << ")" << std::flush;
   return r.str();
 }
 
