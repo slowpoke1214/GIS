@@ -698,19 +698,6 @@ std::string CoordinateIndex::preorderTraversal(CoordinateIndex::CoordinateIndexN
   return result.str();
 }
 
-std::string CoordinateIndex::visualize() {
-  /**
-   * Displays the Quad tree in a box view
-   */
-
-   std::string result = visualizeRecursive(root, 0);
-   return result;
-}
-
-std::string CoordinateIndex::visualizeRecursive(CoordinateIndex::CoordinateIndexNode *node, int resolution) {
-  std::stringstream result;
-}
-
 Database::Database(std::string dbFile) {
   databaseFile = std::move(dbFile);
   indexCount = 0;
@@ -936,4 +923,17 @@ void Database::resetImportStats() {
     numInserted = 0;
     totalNameLength = 0;
     longestP = 0;
+}
+
+std::string CoordinateIndex::visualize() {
+  /**
+   * Displays the Quad tree in a box view
+   */
+
+   std::string result = visualizeRecursive(root, 0);
+   return result;
+}
+
+std::string CoordinateIndex::visualizeRecursive(CoordinateIndex::CoordinateIndexNode *node, int resolution) {
+  std::stringstream result;
 }
