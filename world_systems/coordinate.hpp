@@ -1,3 +1,6 @@
+# ifndef COORDINATE_HPP
+# define COORDINATE_HPP
+
 #include <string>
 
 enum class Hemisphere { north, south, east, west, invalid_hemisphere };
@@ -36,3 +39,5 @@ class Coordinate {
   Coordinate(DMS longitude, DMS latitude);
   std::string repr();
 };
+
+# endif // COORDINATE_HPP
