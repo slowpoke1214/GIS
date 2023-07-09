@@ -30,6 +30,7 @@ NameNode::NameNode(const NameNode & node) {
     feature_name = "";
     state_alpha = "";
     isEmpty = true;
+    index = -1;
   } else {
     feature_id = node.feature_id;
     feature_name = node.feature_name;
@@ -52,7 +53,7 @@ int NameIndex::mostSignificantBit(int x) {
 }
 
 int NameIndex::quadraticResolution(int i) {
-  return ((i^2  + i) / 2);
+  return i == 0 ? 0 : ((i^2  + i) / 2);
 }
  
 NameIndex::NameIndex(int n) {
@@ -66,7 +67,7 @@ NameIndex::NameIndex(int n) {
       break;
     }
   }
-  capacityPrimeIndex++;
+//  capacityPrimeIndex++;
   buckets = new NameNode[capacity];
   std::fill_n(buckets, capacity, NameNode());
   numInserted = 0;
@@ -95,11 +96,11 @@ unsigned int elfHash(const std::string key) {
 }
 
 void NameIndex::insert(int index, GISRecord record) {
-    if (numInserted / capacity > maxLoad) {
+    NameNode node = NameNode(record.feature_id, record.feature_name, record.state_alpha, index);
+    insert(node);
+    if (((float)numInserted / (float)capacity) >= maxLoad) {
         rehash();
     }
-  NameNode node = NameNode(record.feature_id, record.feature_name, record.state_alpha, index);
-  insert(node);
 }
 
 void NameIndex::insert(NameNode &node) {
@@ -113,19 +114,18 @@ void NameIndex::insert(NameNode &node) {
   int i = 0;
   bool inserted = false;
   int initialIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
-  while (!inserted)
+  while (!inserted and maxProbes > i)
   {
-    if (maxProbes < i) {
-        break;
-    }
     int newIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
     NameNode b;
     b = buckets[newIndex];
-    if (initialIndex == newIndex and i != 0)
+    if ((initialIndex == newIndex and i != 0))
+//      if ((initialIndex == newIndex and i != 0) or (((float)numInserted / (float)capacity) >= maxLoad))
     {
       /* Insertion has looped indices, rehash and insert */
       rehash();
-      i = 0;
+     i = 0;
+    //  i++;
      initialIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
      newIndex = (keyHash + quadraticResolution(i) % capacity) % capacity;
       continue;
@@ -144,19 +144,28 @@ void NameIndex::insert(NameNode &node) {
     }
   }
 }
-
+std::string tolower(std::string data) {
+    std::string r;
+    std::transform(data.begin(), data.end(), r.begin(),[](unsigned char c){ return std::tolower(c); });
+    return r;
+}
+int NameIndex::hash(std::string key, int offset) {
+    unsigned int keyHash = elfHash(key) % capacity;
+    int quadraticOffset = quadraticResolution(offset) % capacity;
+    int hash = (keyHash + quadraticOffset) % capacity;
+    return hash;
+}
 std::vector<int> NameIndex::search(std::string feature, std::string state) {
     unsigned int keyHash = elfHash(feature + state) % capacity;
-    std::vector<int> indices;
-    int i = 0;
-    bool found = false;
+//    int i = 0;
+//    bool found = false;
 //    int searchIndex = (keyHash + quadraticResolution(i)) % capacity;
 //    while (!found) {
 //        searchIndex = (keyHash + quadraticResolution(i)) % capacity;
 //        NameNode node;
 //        node = buckets[searchIndex];
 //        if (capacity < i) {
-////        if (capacity < i or maxProbes < i) {
+//        if (capacity < i or maxProbes < i) {
 //            break;
 //        } else if (!node.isEmpty and node.feature_name == feature and node.state_alpha == state) {
 //            indices.push_back(buckets[searchIndex].index);
@@ -181,7 +190,6 @@ std::vector<int> NameIndex::search(std::string feature, std::string state) {
 //        found = false;
 //    }
 //    node.isEmpty;
-    std::vector<std::string> searchedHashs;
 //    std::cout << str() << std::endl;
 //    for (i = 0; i < capacity; i++) {
 //        // int keyHash = hasher(pair.first.feature_name + state);
@@ -203,23 +211,39 @@ std::vector<int> NameIndex::search(std::string feature, std::string state) {
 //    for (std::string i: searchedHashs) {
 //        std::cout << i << std::endl;
 //    }
-    int offset = 1;
+    std::vector<int> indices;
+    std::vector<int> searchedHashs;
+    std::string key = feature + state;
+    int offset = 0;
     int currentPos = (keyHash + quadraticResolution(offset) % capacity) % capacity;
-    while( !buckets[ currentPos ].isEmpty and offset < capacity)
+//    int currentPos = hash(key, offset);
+    NameNode node = buckets[currentPos];
+    while( offset < capacity and offset < maxProbes)
     {
-        if (buckets[ currentPos ].feature_name != feature && buckets[ currentPos ].state_alpha != state) {
-
-            offset += 1;
-            currentPos = (keyHash + quadraticResolution(offset) % capacity) % capacity; // Compute ith probe
-        } else {
-            indices.push_back(offset);
+        node = buckets[currentPos];
+//        if ((tolower(node.feature_name) != tolower(feature)) && (tolower(node.state_alpha) != tolower(state))) {
+        if (!node.isEmpty && (node.feature_name == feature) && (node.state_alpha == state)) {
+            indices.push_back(node.index);
             break;
+        } else {
+            searchedHashs.push_back(node.feature_id);
+            offset += 1;
+//            currentPos = hash(key, offset); // Compute ith probe
+            currentPos = (keyHash + quadraticResolution(offset) % capacity) % capacity; // Compute ith probe
         }
         // if( currentPos >= capacity )
         //     currentPos -= capacity;
     }
+//    for(i = 0; i < capacity; i++) {
+//        NameNode node = buckets[i];
+//        std::cout
+//    }
 //    indices.push_back(offset);
+    std::cout << "did not find in these hash indices" << std::to_string(searchedHashs.size()) << std::endl;
 
+    for (int i: searchedHashs) {
+        std::cout << std::to_string(i) << std::endl;
+    }
     return indices;
 }
 
@@ -363,7 +387,7 @@ std::string BufferPool::str() {
 
 Database::Database(std::string dbFile) {
   databaseFile = std::move(dbFile);
-  indexCount = 1;
+  indexCount = 0;
   std::ofstream dbStream(databaseFile);
   dbStream.close();
   nameIndex = new NameIndex(10);
@@ -418,7 +442,7 @@ std::string Database::searchFile(int index) {
   std::ifstream file(databaseFile);
   std::string line;
 
-  while (index > 0) {
+  while (index >= 0) {
     std::getline(file, line);
     index--;
   }
