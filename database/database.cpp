@@ -119,6 +119,8 @@ int NameIndex::insert(NameNode &node) {
      i = 0;
      longestProbe = -1;
     //  i++;
+      keyHash = elfHash(node.feature_name + node.state_alpha) % capacity;
+
      initialIndex = (keyHash + quadraticResolution(i)) % capacity;
      newIndex = (keyHash + quadraticResolution(i)) % capacity;
       continue;
@@ -174,17 +176,18 @@ std::vector<int> NameIndex::search(std::string feature, std::string state) {
     }
 //    std::cout << "did not find in these hash indices" << std::to_string(searchedHashs.size()) << "\tpossible: " << std::to_string(capacity) << std::endl;
 
-//    for (int i: searchedHashs) {
-//        std::cout << std::to_string(i) << std::endl;
-//    }
-    if (indices.empty()) {
-        for (int i = 0; i < capacity; ++i) {
-            NameNode node = buckets[i];
-            if (!node.isEmpty and node.state_alpha == state and node.feature_name == feature) {
-                indices.push_back(node.index);
-            }
-        }
-    }
+    // for (int i: searchedHashs) {
+    //     std::cout << std::to_string(i) << std::endl;
+    // }
+    // if (indices.empty()) {
+    //     for (int i = 0; i < capacity; ++i) {
+    //         NameNode node = buckets[i];
+    //         if (!node.isEmpty and node.state_alpha == state and node.feature_name == feature) {
+    //             indices.push_back(node.index);
+    //         }
+    //     }
+    // }
+
     return indices;
 }
 
@@ -198,6 +201,7 @@ void NameIndex::rehash() {
     numInserted = 0;
     buckets = new NameNode[newCapacity];
     int originalCap = capacity;
+    capacity = newCapacity;
     for (int i = 0; i < originalCap; i++)
     {
         NameNode node;
@@ -207,7 +211,6 @@ void NameIndex::rehash() {
           insert(node);
       }
     }
-    capacity = newCapacity;
   }
 }
 
