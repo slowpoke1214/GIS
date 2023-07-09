@@ -21,7 +21,7 @@ SystemManager::verifyArguments(int argc, char* argv[]) {
         std::stringstream err;
         err << "Script file at the path provided does not exist. Please "
                "provide a valid path. ("
-            << scriptFilename << ")" << std::endl;
+            << scriptFilename << ")" << std::flush;
         throw std::invalid_argument(err.str());
     }
 }
