@@ -153,12 +153,6 @@ void CommandProcessor::run() {
               int halfWidth = std::stoi(args[3]);
               records = database.what_is_in(coord, halfHeight, halfWidth);
             }
-            // TODO: Find a way to pass the additional parameters dynamically:
-            // TODO: Case 1: what_is_in -filter [pop|water|strcuture] <lat> <long> <half-height> <half-width>
-            // TODO: Case 2: what_is_in -long <lat> <long> <half-height> <half-width>
-            // TODO: Case 3: what_is_in <lat> <long> <half-height> <half-width>
-            // The center of the rectangle search area
-//            Coordinate coord = Coordinate(args[1], args[0]);  // TODO: Cant used args[1]/args[2] because of dynamic input // TODO: Pass optional parameters?
             for (auto &&rec: records) {
               logger.write("\t" + rec);
             }
