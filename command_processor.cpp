@@ -70,7 +70,7 @@ void CommandProcessor::run() {
 
   if (scriptStream) {
     bool hasQuit = false;
-    while (std::getline(scriptStream, commandString)) {
+    while (std::getline(scriptStream, commandString) and !hasQuit) {
       std::vector<std::string> commandTokens =
           helpers::splitString(commandString, scriptDelimeter);
 
@@ -78,7 +78,7 @@ void CommandProcessor::run() {
       std::vector<std::string> args(commandTokens.begin() + 1,
                                     commandTokens.end());
 
-      if (command == Command::comment or hasQuit) {
+      if (command == Command::comment) {
         logger.write(commandString);
         continue;
       } else {
@@ -171,6 +171,7 @@ void CommandProcessor::run() {
           {
             hasQuit = true;
             logger.write("Terminating execution of commands.");
+            logger.writeSeparator();
             break;
           }
           default: {
