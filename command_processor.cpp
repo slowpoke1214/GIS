@@ -97,7 +97,8 @@ void CommandProcessor::run() {
           case Command::debug:
           {
             if (args[0] == "world") {
-              logger.write(database.debugWorld());
+              // Not implemented
+              // logger.write(database.debugWorld());
             } else if (args[0] == "pool") {
               logger.write(database.debugBufferPool());
             } else if (args[0] == "hash") {

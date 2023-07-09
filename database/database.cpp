@@ -935,5 +935,17 @@ std::string CoordinateIndex::visualize() {
 }
 
 std::string CoordinateIndex::visualizeRecursive(CoordinateIndex::CoordinateIndexNode *node, int resolution) {
+  if (node != nullptr) {
+    // Check if the current node is a leaf
+    if (node->NW == nullptr && node->NE == nullptr && node->SW == nullptr && node->SE == nullptr) {
+      // Leaf node
+      // Take height and width of current node, then depending on the depth print blank space equal to border * depth to fill the blank space?
+    } else {
+      // Not a leaf node
+      // Recursively call function again to traverse
+    }
+  }
+
+
   std::stringstream result;
 }
