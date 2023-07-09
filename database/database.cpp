@@ -433,17 +433,29 @@ void CoordinateIndex::what_is_at_recursive(CoordinateIndexNode* node, Coordinate
   }
 }
 
-std::vector<int> CoordinateIndex::what_is_in(Coordinate coord) {
+std::vector<int> CoordinateIndex::what_is_in(Region region) {
   /**
-   *
+   * Returns all points within a specified region
    */
 
-  // TODO: Where the magic happens.
-  // TODO: How tf do we create a region from the half height and half width parameters. Should those be passed here too? Or should the region be created before it hits this function?
+  // TODO: Traverse the quad tree and only return points that are within the region parameter
   std::vector<int> searchResults;
+  what_is_in_recursive(root, region, searchResults);
   return searchResults;
 }
 
+void CoordinateIndex::what_is_in_recursive(CoordinateIndex::CoordinateIndexNode *node, Region region,
+                                           std::vector<int> &searchResults) {
+  /**
+   * Recursively iterates through the quad tree to search for points within a specified region
+   */
+   if (node == nullptr) {
+     return;
+   }
+
+   // Check if part of the region is within the nodes borders
+
+}
 
 void CoordinateIndex::splitNode(CoordinateIndexNode* node) {
   /**
@@ -566,7 +578,6 @@ std::string CoordinateIndex::visualize() {
    return display;
 }
 
-
 Database::Database(std::string dbFile) {
   databaseFile = std::move(dbFile);
   indexCount = 1;
@@ -681,34 +692,51 @@ std::vector<std::string> Database::whatIs(std::string feature, std::string state
   return recordStrings;
 }
 
-std::vector<std::string> Database::whatIsIn(Coordinate coord) {
-  // TODO: add the <half_height and width> parameter, and possibly an optional parameter? like pythons **kwargs.
-//  std::vector<int> indices = {1, 2, 3, 4};
-  std::vector<std::string> recordStrings;
-  return recordStrings;
+std::vector<std::string> Database::what_is_in(Coordinate coord, int halfHeight, int halfWidth) {
+  // TODO: Create region object
+  Region region = Region(coord, halfHeight, halfWidth);
 
-  // TODO: Possibly create the region object here? Then pass only the region object and the additional object to the CoordinateIndex::what_is_in function. Yeah seems best
-  // TODO: Potentially need to have the coordinates here to call coord.repr() for the "The following 1 feature(s) were found in (38d 21m 48s North +/- 15, 79d 31m 9s West +/- 15)" type shit
-//  std::vector<int> indices = coordinateIndex->what_is_in(coord);
-//  if (!indices.empty()) {
-//    std::stringstream str;
-//    str << "\t The following feature(s) were found at " + coord.repr();
-//    recordStrings.push_back(str.str());
-//    std::vector<GISRecord> records = getRecords(indices);
-//    for (int i = 0; i < records.size(); i++) {
-//      GISRecord rec = records[i];
-//      std::stringstream rStr;
-//      rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\"  \"" << rec.county_name << "\"  \"" << rec.state_alpha << "\"";
-//      recordStrings.push_back(rStr.str());
-//    }
-//
-//  } else {
-//    std::stringstream rStr;
-//    rStr << "  Nothing was found at " << coord.repr();
-//    recordStrings.push_back(rStr.str());
-//  }
-//  return recordStrings;
+  std::vector<int> indices = coordinateIndex->what_is_in(region);
+  return std::vector<std::string>();
 }
+
+std::vector<std::string>
+Database::what_is_in(Coordinate coord, std::string &filterType, int halfHeight, int HalfWidth) {
+  return std::vector<std::string>();
+}
+
+std::vector<std::string> Database::what_is_in(Coordinate coord, bool longListing, int halfHeight, int HalfWidth) {
+  return std::vector<std::string>();
+}
+
+//std::vector<std::string> Database::whatIsIn(Coordinate coord) {
+//  // TODO: add the <half_height and width> parameter, and possibly an optional parameter? like pythons **kwargs.
+////  std::vector<int> indices = {1, 2, 3, 4};
+//  std::vector<std::string> recordStrings;
+//  return recordStrings;
+//
+//  // TODO: Possibly create the region object here? Then pass only the region object and the additional object to the CoordinateIndex::what_is_in function. Yeah seems best
+//  // TODO: Potentially need to have the coordinates here to call coord.repr() for the "The following 1 feature(s) were found in (38d 21m 48s North +/- 15, 79d 31m 9s West +/- 15)" type shit
+////  std::vector<int> indices = coordinateIndex->what_is_in(coord);
+////  if (!indices.empty()) {
+////    std::stringstream str;
+////    str << "\t The following feature(s) were found at " + coord.repr();
+////    recordStrings.push_back(str.str());
+////    std::vector<GISRecord> records = getRecords(indices);
+////    for (int i = 0; i < records.size(); i++) {
+////      GISRecord rec = records[i];
+////      std::stringstream rStr;
+////      rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\"  \"" << rec.county_name << "\"  \"" << rec.state_alpha << "\"";
+////      recordStrings.push_back(rStr.str());
+////    }
+////
+////  } else {
+////    std::stringstream rStr;
+////    rStr << "  Nothing was found at " << coord.repr();
+////    recordStrings.push_back(rStr.str());
+////  }
+////  return recordStrings;
+//}
 
 std::string Database::debugNameIndex() {
   return nameIndex->str();

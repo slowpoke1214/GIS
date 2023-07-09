@@ -17,6 +17,7 @@ class DMS {
  public:
   DMS();
   DMS(int totalSeconds, Hemisphere hemisphere);
+  DMS(int totalSeconds, bool isLatitude);
   DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere);
   DMS half();
   DMS avg(DMS rhs);

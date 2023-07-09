@@ -14,6 +14,20 @@ Region::Region(DMS northLat, DMS southLat, DMS eastLong, DMS westLong) {
   topRight = Coordinate(eastLong, northLat);
 };
 
+Region::Region(Coordinate center, int halfHeight, int halfWidth) {
+  // Creates a region from a center point and height and width
+  DMS lat = center.lat;
+  DMS lon = center.lon;
+
+  DMS top = DMS(lat.totalSeconds() + halfHeight, true);
+  DMS bottom = DMS(lat.totalSeconds() - halfHeight, true);
+  DMS left = DMS(lon.totalSeconds() - halfWidth, false);
+  DMS right = DMS(lon.totalSeconds() + halfWidth, false);
+
+  bottomLeft = Coordinate(left, bottom);
+  topRight = Coordinate(right, top);
+}
+
 DMS Region::top() { return topRight.lat; }
 
 DMS Region::bottom() { return bottomLeft.lat; }

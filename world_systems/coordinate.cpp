@@ -42,6 +42,25 @@ DMS::DMS(int totalSeconds, Hemisphere hemisphere) {
   isLat = (hem == Hemisphere::north or hem == Hemisphere::south);
 }
 
+DMS::DMS(int totalSeconds, bool isLatitude) {
+  Hemisphere h = Hemisphere::invalid_hemisphere;
+  if (isLatitude){
+      h = totalSeconds > 0 ? Hemisphere::north : Hemisphere::south;
+  } else {
+      h = totalSeconds > 0 ? Hemisphere::east : Hemisphere::west;
+  }
+
+  int totalAbsSeconds = abs(totalSeconds);
+
+  deg = int(totalAbsSeconds / 3600);
+  int totalMinutes = totalAbsSeconds - deg * 3600;
+  min = int(totalMinutes / 60);
+  int _totalSeconds = totalMinutes - min * 60;
+  sec = int(_totalSeconds);
+  hem = h;
+  isLat = isLatitude;
+}
+
 DMS::DMS(int degrees, int minutes, float seconds, Hemisphere hemisphere) {
   deg = degrees;
   min = minutes;
