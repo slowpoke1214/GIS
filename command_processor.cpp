@@ -165,6 +165,7 @@ void CommandProcessor::run() {
             for (auto &&rec: records) {
               logger.write("\t" + rec);
             }
+            break;
           }
           case Command::quit:
           {
