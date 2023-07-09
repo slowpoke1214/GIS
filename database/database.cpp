@@ -330,7 +330,7 @@ void BufferPool::insert(int index, GISRecord record) {
   cache_.push_front(std::make_pair(index, record));
 }
 
-GISRecord BufferPool::search(int index) {
+GISRecord BufferPool::search(int index, std::string databaseFile) {
   /**
    * Search's for the specified record
    *
@@ -355,11 +355,21 @@ GISRecord BufferPool::search(int index) {
     cache_.pop_back();
   }
 
-  // Return empty record if nothing is found
-  GISRecord rec;
+  // Return record from file if not in buffer
+  GISRecord rec = searchFile(index, databaseFile);
+  insert(index, rec);
   return rec;
 }
+GISRecord BufferPool::searchFile(int index, std::string databaseFile) {
+  std::ifstream file(databaseFile);
+  std::string line;
 
+  while (index >= 0) {
+    std::getline(file, line);
+    index--;
+  }
+  return GISRecord(line);
+}
 std::string BufferPool::str() {
   /**
    * Prints the contents of the buffer pool
@@ -435,15 +445,15 @@ std::vector<GISRecord> Database::getRecords(std::vector<int> indices) {
   std::vector<GISRecord> records;
   for (int index : indices) {
     // GISRecord rec;
-    GISRecord rec = buffer.search(index);
-    if (rec.empty()) {
-        // Record does not exist in buffer pool, search db file instead
-      std::string recLine = searchFile(index);
-      // std::cout << "recLine: " << recLine << std::endl;
-      rec = GISRecord(recLine);
+    GISRecord rec = buffer.search(index, databaseFile);
+    // if (rec.empty()) {
+    //     // Record does not exist in buffer pool, search db file instead
+    //   std::string recLine = searchFile(index);
+    //   // std::cout << "recLine: " << recLine << std::endl;
+    //   rec = GISRecord(recLine);
 
-      buffer.insert(index, rec);
-    }
+    //   buffer.insert(index, rec);
+    // }
     records.push_back(rec);
     debugNameIndex();
     debugBufferPool();

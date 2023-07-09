@@ -72,13 +72,14 @@ int capacityPrimeIndex;
 class BufferPool {
  private:
   const static int maxPoolSize = 15;
+  GISRecord searchFile(int index, std::string databaseFile);
   std::deque<std::pair<int, GISRecord>> cache_; // Double ended queue of Key/Value pairs, where the key is the index corresponding to the database, and the value is the GISRecord
  public:
   BufferPool();
 
   void moveToFront(int index);
   void insert(int index, GISRecord record);
-  GISRecord search(int index);
+  GISRecord search(int index, std::string databaseFile);
 
   std::string str();
 };
