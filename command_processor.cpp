@@ -49,12 +49,19 @@ CommandProcessor::CommandProcessor(std::string db, std::string script,
 
 void CommandProcessor::import(std::string filename) {
   std::ifstream file(filename);
-
+  database.resetImportStats();
   std::string line;
   std::getline(file, line);
   while (std::getline(file, line)) {
     database.insert(line, worldBorder);
   }
+  std::stringstream out;
+  out <<
+  "Imported Features by name: " << std::to_string(database.numImported()) << std::endl <<
+  "Longest probe sequence:    " << std::to_string(database.longestProbe()) << std::endl <<
+  "Imported Locations:        " << std::to_string(database.numImported()) << std::endl <<
+  "Average name length:       " << std::to_string(database.avgNameLength());
+  logger.write(out.str());
 }
 
 void CommandProcessor::run() {
@@ -62,6 +69,7 @@ void CommandProcessor::run() {
   std::string commandString;
 
   if (scriptStream) {
+    bool hasQuit = false;
     while (std::getline(scriptStream, commandString)) {
       std::vector<std::string> commandTokens =
           helpers::splitString(commandString, scriptDelimeter);
@@ -70,7 +78,7 @@ void CommandProcessor::run() {
       std::vector<std::string> args(commandTokens.begin() + 1,
                                     commandTokens.end());
 
-      if (command == Command::comment) {
+      if (command == Command::comment or hasQuit) {
         logger.write(commandString);
         continue;
       } else {
@@ -159,10 +167,12 @@ void CommandProcessor::run() {
             {
               logger.write("\t" + rec);
             }
-            logger.writeSeparator();
+          case Command::quit:
+          {
+            hasQuit = true;
+            logger.write("Terminating execution of commands.");
             break;
           }
-            
           default: {
             logger.writeSeparator();
             continue;

@@ -1,3 +1,6 @@
+# ifndef REGION_HPP
+# define REGION_HPP
+
 #include <string>
 
 #include "coordinate.hpp"
@@ -28,3 +31,5 @@ class Region {
 
   std::string repr();
 };
+
+# endif // REGION_HPP

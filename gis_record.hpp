@@ -1,3 +1,6 @@
+# ifndef GISRECORD_HPP
+# define GISRECORD_HPP
+
 #include <sstream>
 
 const char GISRecordDelimeter = '|';
@@ -38,3 +41,5 @@ class GISRecord {
 
   bool empty();
 };
+
+# endif // GISRECORD_HPP

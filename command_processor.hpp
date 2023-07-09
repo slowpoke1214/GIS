@@ -1,8 +1,11 @@
+# ifndef COMMANDPROCESSOR_H
+# define COMMANDPROCESSOR_H
+
 #include <fstream>
 #include <string>
 
 #include "logger.hpp"
-// #include "world_systems/region.hpp"
+#include "world_systems/region.hpp"
 // #include "world.hpp"
 #include "database/database.hpp"
 
@@ -12,7 +15,6 @@ class CommandProcessor {
  private:
   // Instantiate class attributes
   Database database;
-  BufferPool bufferPool;
   std::string databaseFile;
   std::string scriptFile;
   Logger logger;
@@ -34,3 +36,5 @@ class CommandProcessor {
 
   void run();
 };
+
+# endif // COMMANDPROCESSOR_H
