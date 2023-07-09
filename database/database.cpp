@@ -175,20 +175,6 @@ std::vector<int> NameIndex::search(std::string feature, std::string state) {
             currentPos = (keyHash + quadraticResolution(offset)) % capacity; // Compute ith probe
         }
     }
-//    std::cout << "did not find in these hash indices" << std::to_string(searchedHashs.size()) << "\tpossible: " << std::to_string(capacity) << std::endl;
-
-    // for (int i: searchedHashs) {
-    //     std::cout << std::to_string(i) << std::endl;
-    // }
-    // if (indices.empty()) {
-    //     for (int i = 0; i < capacity; ++i) {
-    //         NameNode node = buckets[i];
-    //         if (!node.isEmpty and node.state_alpha == state and node.feature_name == feature) {
-    //             indices.push_back(node.index);
-    //         }
-    //     }
-    // }
-
     return indices;
 }
 
@@ -920,35 +906,6 @@ std::vector<std::string> Database::what_is_in(Coordinate coord, bool longListing
   }
   return recordStrings;
 }
-
-//std::vector<std::string> Database::whatIsIn(Coordinate coord) {
-//  // TODO: add the <half_height and width> parameter, and possibly an optional parameter? like pythons **kwargs.
-////  std::vector<int> indices = {1, 2, 3, 4};
-//  std::vector<std::string> recordStrings;
-//  return recordStrings;
-//
-//  // TODO: Possibly create the region object here? Then pass only the region object and the additional object to the CoordinateIndex::what_is_in function. Yeah seems best
-//  // TODO: Potentially need to have the coordinates here to call coord.repr() for the "The following 1 feature(s) were found in (38d 21m 48s North +/- 15, 79d 31m 9s West +/- 15)" type shit
-////  std::vector<int> indices = coordinateIndex->what_is_in(coord);
-////  if (!indices.empty()) {
-////    std::stringstream str;
-////    str << "\t The following feature(s) were found at " + coord.repr();
-////    recordStrings.push_back(str.str());
-////    std::vector<GISRecord> records = getRecords(indices);
-////    for (int i = 0; i < records.size(); i++) {
-////      GISRecord rec = records[i];
-////      std::stringstream rStr;
-////      rStr << "\t\t" << indices[i] << ":  \"" << rec.feature_name << "\"  \"" << rec.county_name << "\"  \"" << rec.state_alpha << "\"";
-////      recordStrings.push_back(rStr.str());
-////    }
-////
-////  } else {
-////    std::stringstream rStr;
-////    rStr << "  Nothing was found at " << coord.repr();
-////    recordStrings.push_back(rStr.str());
-////  }
-////  return recordStrings;
-//}
 
 std::string Database::debugNameIndex() {
   return nameIndex->str();
