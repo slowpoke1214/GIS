@@ -42,16 +42,6 @@ NameNode::NameNode(const NameNode & node) {
   }
 }
 
-
-int NameIndex::mostSignificantBit(int x) {
-  if (x == 0)
-    return 0;
-  int mostSignificantBit = 31;
-  while ((x & (1 << mostSignificantBit)) == 0)
-    mostSignificantBit--;
-  return mostSignificantBit;
-}
-
 int NameIndex::quadraticResolution(int i) {
   return i == 0 ? 0 : ((i^2  + i) / 2);
 }
@@ -164,60 +154,6 @@ int NameIndex::hash(std::string key, int offset) {
 }
 std::vector<int> NameIndex::search(std::string feature, std::string state) {
     unsigned int keyHash = elfHash(feature + state) % capacity;
-//    int i = 0;
-//    bool found = false;
-//    int searchIndex = (keyHash + quadraticResolution(i)) % capacity;
-//    while (!found) {
-//        searchIndex = (keyHash + quadraticResolution(i)) % capacity;
-//        NameNode node;
-//        node = buckets[searchIndex];
-//        if (capacity < i) {
-//        if (capacity < i or maxProbes < i) {
-//            break;
-//        } else if (!node.isEmpty and node.feature_name == feature and node.state_alpha == state) {
-//            indices.push_back(buckets[searchIndex].index);
-//            found = true;
-//        }
-//        i++;
-//    }
-//    for (i = 0; i < capacity; i++) {
-//        searchIndex = (keyHash + quadraticResolution(i)) % capacity;
-//        NameNode node;
-////        bool tmpFound = false;
-//        node = buckets[searchIndex];
-//        if (!node.isEmpty and (node.feature_name == feature) and (node.state_alpha == state)) {
-//            indices.push_back(node.index);
-//            found = true;
-////            tmpFound = true;
-//            std::cout << "searching(" << "T" << "):\t" << (node.feature_name + "\t" + node.state_alpha + "\t" + std::to_string(node.index)) << std::endl;
-//
-//            break;
-//        }
-//        std::cout << "searching(" << "F" << "):\t" << (node.isEmpty ? "Empty" : (node.feature_name + "\t" + node.state_alpha + "\t" + std::to_string(node.index))) << std::endl;
-//        found = false;
-//    }
-//    node.isEmpty;
-//    std::cout << str() << std::endl;
-//    for (i = 0; i < capacity; i++) {
-//        // int keyHash = hasher(pair.first.feature_name + state);
-//        int searchIndex = (keyHash + quadraticResolution(i)  % capacity) % capacity;
-//        searchedHashs.push_back(std::to_string(searchIndex) + "\t" + std::to_string(keyHash) + "\t" + std::to_string(
-//                quadraticResolution(i)) + "\t" + std::to_string(i));
-//        NameNode node = buckets[searchIndex];
-//        if(!node.isEmpty) {
-//            if (!node.isEmpty and (node.feature_name == feature) and (node.state_alpha == state)) {
-//                indices.push_back(node.index);
-//                break;
-//            }
-//            if (node.feature_name == "Central Church" or node.state_alpha == "VA") {
-//                std::cout << "marker" << std::endl;
-//            }
-////            std::cout << "\t" << std::to_string(i) << ": [" << node.feature_name << ":" << node.state_alpha << ", [" << std::to_string(node.index) << "]]\n";
-//        }
-//    }
-//    for (std::string i: searchedHashs) {
-//        std::cout << i << std::endl;
-//    }
     std::vector<int> indices;
     std::vector<int> searchedHashs;
     std::string key = feature + state;
@@ -444,32 +380,12 @@ std::vector<GISRecord> Database::getRecords(std::vector<int> indices) {
    */
   std::vector<GISRecord> records;
   for (int index : indices) {
-    // GISRecord rec;
     GISRecord rec = buffer.search(index, databaseFile);
-    // if (rec.empty()) {
-    //     // Record does not exist in buffer pool, search db file instead
-    //   std::string recLine = searchFile(index);
-    //   // std::cout << "recLine: " << recLine << std::endl;
-    //   rec = GISRecord(recLine);
-
-    //   buffer.insert(index, rec);
-    // }
     records.push_back(rec);
     debugNameIndex();
     debugBufferPool();
   }
   return records;
-}
-
-std::string Database::searchFile(int index) {
-  std::ifstream file(databaseFile);
-  std::string line;
-
-  while (index >= 0) {
-    std::getline(file, line);
-    index--;
-  }
-  return line;
 }
 
 std::vector<GISRecord> Database::whatIsAt(Coordinate coord) {

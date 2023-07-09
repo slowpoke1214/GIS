@@ -26,26 +26,12 @@ class NameNode {
 class NameIndex {
  private:
   int capacity;
-  // Temporarily use STD hash class build out NameIndex class
-  // Will implement elfhash at later time
-  std::hash<std::string> hasher;
   void rehash();
   int insert(NameNode &node);
   int numInserted;
   constexpr static const float maxLoad = 0.7;
     const static int maxProbes = 100;
   int hash(std::string key, int offset);
-
-  // Temporarily use STD unordered map to build out NameIndex class
-  // Will implement hash table at later time
-//  std::unordered_map<unsigned int, NameNode> nameMap;
-
-  /// Returns the bit index of the most significant bit.
-  /// If the input is zero, it returns zero
-  /// This function will help you locate the crrect good prime in the array below
-  /// It will also help you compute the next power of two
-  static int mostSignificantBit(int x);
-  
   int quadraticResolution(int i);
 
   NameNode* buckets;
@@ -107,7 +93,6 @@ class Database {
   NameIndex* nameIndex;
   // CoordinateIndex coordIndex;
 
-  std::string searchFile(int index);
   void saveToFile(std::string line);
 
   std::vector<GISRecord> getRecords(std::vector<int> indices);
