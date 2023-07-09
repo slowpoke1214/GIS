@@ -31,6 +31,9 @@ GISRecord::GISRecord(const GISRecord &record) {
   feature_name = std::move(record.feature_name);
   state_alpha = std::move(record.state_alpha);
   // std::cout << str();
+  if (prim_long_dms == "Unknown" or primary_lat_dms == "Unknown" or feature_name == "" or state_alpha == "" or feature_class == "" or state_numeric == "" or county_name == "" or county_numeric == "" or primary_lat_dms == "" or prim_long_dms == "") {
+        isEmpty = true;
+  }
 }
 
 bool GISRecord::empty() { return isEmpty; }
