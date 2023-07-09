@@ -95,24 +95,26 @@ unsigned int elfHash(const std::string key) {
   return hashVal;
 }
 
-void NameIndex::insert(int index, GISRecord record) {
+int NameIndex::insert(int index, GISRecord record) {
     NameNode node = NameNode(record.feature_id, record.feature_name, record.state_alpha, index);
-    insert(node);
+    int longestProbe = insert(node);
     if (((float)numInserted / (float)capacity) >= maxLoad) {
         rehash();
     }
+    return longestProbe;
 }
 
-void NameIndex::insert(NameNode &node) {
+int NameIndex::insert(NameNode &node) {
+    bool inserted = false;
+    int longestProbe = -1;
   if (node.isEmpty)
   {
-    return;
+    return inserted;
   }
   
   unsigned int keyHash = elfHash(node.feature_name + node.state_alpha) % capacity;
 //  nameMap[keyHash] = node;
   int i = 0;
-  bool inserted = false;
   int initialIndex = (keyHash + quadraticResolution(i)) % capacity;
   while (!inserted and maxProbes > i)
   {
@@ -125,6 +127,7 @@ void NameIndex::insert(NameNode &node) {
       /* Insertion has looped indices, rehash and insert */
       rehash();
      i = 0;
+     longestProbe = -1;
     //  i++;
      initialIndex = (keyHash + quadraticResolution(i)) % capacity;
      newIndex = (keyHash + quadraticResolution(i)) % capacity;
@@ -134,6 +137,9 @@ void NameIndex::insert(NameNode &node) {
       buckets[newIndex] = std::move(node);
       inserted = true;
       numInserted++;
+      if (longestProbe < i) {
+            longestProbe = i;
+      }
     } else if (b.feature_name == node.feature_name and b.state_alpha == node.state_alpha)
     {
       /* Do nothing, already inserted */
@@ -143,6 +149,7 @@ void NameIndex::insert(NameNode &node) {
       i++;
     }
   }
+    return longestProbe;
 }
 std::string tolower(std::string data) {
     std::string r;
@@ -386,6 +393,9 @@ std::string BufferPool::str() {
 Database::Database(std::string dbFile) {
   databaseFile = std::move(dbFile);
   indexCount = 0;
+  numInserted = 0;
+  totalNameLength = 0;
+  longestP = 0;
   std::ofstream dbStream(databaseFile);
   dbStream.close();
   nameIndex = new NameIndex(10);
@@ -396,9 +406,14 @@ void Database::insert(std::string recordLine) {
   GISRecord record(recordLine);
   // TODO: insert to coordinate index
   // TODO: insert to name index
-  nameIndex->insert(indexCount, record);
+  int lp = nameIndex->insert(indexCount, record);
   saveToFile(recordLine);
   indexCount++;
+  numInserted = numInserted + (lp != -1 ? 1 : 0);
+  totalNameLength = totalNameLength + record.feature_name.size();
+    if (longestP < lp) {
+        longestP = lp;
+    }
 }
 void Database::saveToFile(std::string line) {
   std::fstream dbStream(databaseFile, std::ios::app);
@@ -489,3 +504,13 @@ std::string Database::debugBufferPool() {
   return buffer.str();
 }
 
+
+int Database::numImported(){
+  return numInserted;
+}
+int Database::avgNameLength(){
+  return totalNameLength/numInserted;
+}
+int Database::longestProbe() {
+    return longestP;
+}

@@ -55,6 +55,13 @@ void CommandProcessor::import(std::string filename) {
   while (std::getline(file, line)) {
     database.insert(line);
   }
+  std::stringstream out;
+  out <<
+  "Imported Features by name: " << std::to_string(database.numImported()) << std::endl <<
+  "Longest probe sequence:    " << std::to_string(database.longestProbe()) << std::endl <<
+  "Imported Locations:        " << std::to_string(database.numImported()) << std::endl <<
+  "Average name length:       " << std::to_string(database.avgNameLength());
+  logger.write(out.str());
 }
 
 void CommandProcessor::run() {

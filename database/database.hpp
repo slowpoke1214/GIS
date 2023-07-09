@@ -30,7 +30,7 @@ class NameIndex {
   // Will implement elfhash at later time
   std::hash<std::string> hasher;
   void rehash();
-  void insert(NameNode &node);
+  int insert(NameNode &node);
   int numInserted;
   constexpr static const float maxLoad = 0.7;
     const static int maxProbes = 100;
@@ -63,7 +63,7 @@ int capacityPrimeIndex;
  public:
   NameIndex(int n);
 
-  void insert(int index, GISRecord record);
+  int insert(int index, GISRecord record);
   std::vector<int> search(std::string feature, std::string state);
 
   std::string str();
@@ -98,6 +98,9 @@ class Database {
  private:
   std::string databaseFile;
   int indexCount;
+  int numInserted;
+  int totalNameLength;
+  int longestP;
 
   BufferPool buffer;
   NameIndex* nameIndex;
@@ -120,4 +123,7 @@ class Database {
   std::string debugNameIndex();
 
   std::string debugBufferPool();
+  int numImported();
+  int avgNameLength();
+  int longestProbe();
 };
