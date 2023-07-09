@@ -79,14 +79,17 @@ GISRecord::GISRecord(const std::string &line) {
     map_name = attributes[17];
     date_created = attributes[18];
     date_edited = attributes[19];
+    isEmpty = false;
   } catch (const std::exception &e) {
     std::stringstream err;
     err << "Error parsing GIS Record. Line in file does not conform to "
            "standard form: "
         << e.what();
-    throw std::invalid_argument(err.str());
+   throw std::invalid_argument(err.str());
   }
-  isEmpty = false;
+    if (prim_long_dms == "Unknown" or primary_lat_dms == "Unknown") {
+        isEmpty = true;
+    }
 }
 
 GISRecord::~GISRecord() {}
